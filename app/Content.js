@@ -92,14 +92,8 @@ export default class Content extends Component {
             }
           }
             title="Check now"
-            color="#841584"
+            color="red"
           />
-        <Button
-          onPress={() => Actions.settingsScreen()}
-          title="Settings"
-          color="#841584"
-         />
-
         <Text style={styles.response}> {this.state.response === '' ? "Loading..." : this.state.response}
         </Text>
         <PushController />
