@@ -7,6 +7,7 @@ import {
 import { Router, Scene } from 'react-native-router-flux';
 import SettingsScreen from './SettingsScreen';
 import Content from './Content';
+import CoffeePic from './CoffeePic';
 
 console.disableYellowBox = true;
 
@@ -31,6 +32,10 @@ const App = () => {
             component={Content}
             title=""
             initial
+          />
+        <Scene key="coffeePic"
+            component={CoffeePic}
+            title=""
           />
         </Scene>
         <Scene key="settingsTab" title="Settings" icon={TabIcon}>

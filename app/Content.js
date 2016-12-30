@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   loginButtonBackground: {
     flex: 1,
     height: 40,
-    borderRadius: 5
+    borderRadius: 20
   },
   loginButtonLabel: {
     color: 'white'
@@ -108,9 +108,22 @@ export default class Content extends Component {
                         }}
                         buttonState={this.state.buttonState}
                         />
-                      <Text style={styles.response}> {""}</Text>
-
+                      <Text style={styles.response}> </Text>
                     </View>
+                    <View style={styles.button}>
+                      <AwesomeButton
+                        backgroundStyle={styles.loginButtonBackground}
+                        labelStyle={styles.loginButtonLabel}
+                        states={{
+                          default: {
+                            text: 'See the camera photo',
+                            onPress: () => Actions.coffeePic(),
+                            backgroundColor: '#1155DD'
+                          }
+                       }} />
+                       <Text style={styles.response}> </Text>
+
+                   </View>
                     <PushController />
         </View>
     );
