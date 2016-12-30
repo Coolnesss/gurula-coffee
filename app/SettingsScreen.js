@@ -5,7 +5,7 @@ import {
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux'; // New code
-import AppSettings from './settings';
+import AppSettings from './AppSettings';
 
 const SettingsScreen = () => {
   return (
