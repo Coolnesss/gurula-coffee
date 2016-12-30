@@ -1,14 +1,36 @@
 'use strict';
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Picker, AppState, Platform, Button, Image } from 'react-native';
+import { View, Text, StyleSheet, Picker, AppState, Platform, Button, Image, AsyncStorage } from 'react-native';
 import SettingsList from 'react-native-settings-list';
+import BackgroundTimer from 'react-native-background-timer';
+
 
 class AppSettings extends Component {
 
-  constructor(){
+  constructor() {
     super();
-    this.onValueChange = this.onValueChange.bind(this);
+    this.toggleUpdateState = this.toggleUpdateState.bind(this);
+
     this.state = {update: false};
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem("update").then((value) => {
+        if (value === "true") {
+          this.setState({update: true});
+        } else if (value === "false") {
+          this.setState({update: false});
+        }
+    }).done();
+  }
+
+  toggleUpdateState() {
+    if (!this.state.update) {
+      AsyncStorage.setItem("update", "true");
+    } else {
+      AsyncStorage.setItem("update", "false");
+    }
+    this.setState({update: !this.state.update});
   }
 
   render() {
@@ -23,7 +45,7 @@ class AppSettings extends Component {
             <SettingsList.Item
               hasSwitch={true}
               switchState={this.state.update}
-              switchOnValueChange={this.onValueChange}
+              switchOnValueChange={this.toggleUpdateState}
               hasNavArrow={false}
               title='Update every minute'
               titleStyle={{fontSize:16}}
@@ -32,10 +54,6 @@ class AppSettings extends Component {
         </View>
       </View>
     );
-  }
-
-  onValueChange(value) {
-    this.setState({update: value});
   }
 }
 const styles = StyleSheet.create({
