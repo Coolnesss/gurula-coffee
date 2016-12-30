@@ -111,6 +111,7 @@ export default class Content extends Component {
                       <Text style={styles.response}> {""}</Text>
 
                     </View>
+                    <PushController />
         </View>
     );
   }
