@@ -5,9 +5,10 @@ import {
   View
 } from 'react-native';
 import { Router, Scene } from 'react-native-router-flux';
-
 import SettingsScreen from './SettingsScreen';
 import Content from './Content';
+
+console.disableYellowBox = true;
 
 const TabIcon = ({ selected, title }) => {
   return (
