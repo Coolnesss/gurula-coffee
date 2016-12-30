@@ -28,7 +28,7 @@ const App = () => {
         <Scene key="contentTab" title="Coffee" icon={TabIcon}>
           <Scene key="content"
             component={Content}
-            title="GurulaCoffee"
+            title=""
             initial
           />
         </Scene>
@@ -36,7 +36,7 @@ const App = () => {
             <Scene
               key="settingsScreen"
               component={SettingsScreen}
-              title="Settings"
+              title=""
             />
           </Scene>
         </Scene>

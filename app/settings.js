@@ -4,10 +4,11 @@ import { View, Text, StyleSheet, Picker, AppState, Platform, Button, Image } fro
 import SettingsList from 'react-native-settings-list';
 
 class AppSettings extends Component {
+
   constructor(){
     super();
     this.onValueChange = this.onValueChange.bind(this);
-    this.state = {switchValue: false};
+    this.state = {update: false};
   }
 
   render() {
@@ -21,10 +22,10 @@ class AppSettings extends Component {
             <SettingsList.Header headerStyle={{marginTop:15}}/>
             <SettingsList.Item
               hasSwitch={true}
-              switchState={this.state.switchValue}
+              switchState={this.state.update}
               switchOnValueChange={this.onValueChange}
               hasNavArrow={false}
-              title='Airplane Mode'
+              title='Update every minute'
               titleStyle={{fontSize:16}}
             />
           </SettingsList>
@@ -34,7 +35,7 @@ class AppSettings extends Component {
   }
 
   onValueChange(value) {
-    this.setState({switchValue: value});
+    this.setState({update: value});
   }
 }
 const styles = StyleSheet.create({

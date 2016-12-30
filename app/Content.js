@@ -39,6 +39,8 @@ export default class Content extends Component {
     super(props);
 
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
+    this.checkCoffeeState = this.checkCoffeeState.bind(this);
+
     this.state = {
       response: ""
     };
@@ -54,16 +56,7 @@ export default class Content extends Component {
 
   handleAppStateChange(appState) {
     if (appState === 'active') {
-      fetch(apiUrl)
-        .then((response) => response.json())
-        .then((responseJson) => {
-          this.setState({
-            response: responseJson.state
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      this.checkCoffeeState();
     }
   }
 
@@ -78,26 +71,27 @@ export default class Content extends Component {
             You can also press the button to find out if there's coffee right now.
           </Text>
           <Button
-            onPress={() => {
-              fetch(apiUrl)
-                .then((response) => response.json())
-                .then((responseJson) => {
-                  this.setState({
-                    response: responseJson.state
-                  }, () => console.log(this.state));
-                })
-                .catch((error) => {
-                  console.error(error);
-                });
-            }
-          }
+            onPress={this.checkCoffeeState}
             title="Check now"
             color="red"
           />
-        <Text style={styles.response}> {this.state.response === '' ? "Loading..." : this.state.response}
+        <Text style={styles.response}> {this.state.response}
         </Text>
         <PushController />
         </View>
     );
   }
+
+  checkCoffeeState() {
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          response: responseJson.state
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
 }
