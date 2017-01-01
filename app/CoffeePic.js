@@ -6,9 +6,12 @@ import {
   Image
 } from 'react-native';
 
-const coffeeUrl = "http://gurula.wtf/kahvi/kahvi.jpg";
 
 const CoffeePic = () => {
+  // Fix for bug in React Native
+  var coffeeUrl = "http://gurula.wtf/kahvi/kahvi.jpg";
+  coffeeUrl += '?random_number=' + new Date().getTime()
+
   return (
     <View style={styles.container}>
       <Image
