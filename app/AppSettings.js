@@ -7,7 +7,7 @@ import PushNotification from 'react-native-push-notification';
 import PushController from './PushController';
 
 const timerInterval = 60000;
-const apiUrl = "https://gurula-coffee.herokuapp.com/state"
+const apiUrl = "http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/"
 
 class AppSettings extends Component {
 

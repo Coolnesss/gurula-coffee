@@ -5,7 +5,7 @@ import PushController from './PushController';
 import PushNotification from 'react-native-push-notification';
 import AwesomeButton from 'react-native-awesome-button';
 
-const apiUrl = "https://gurula-coffee.herokuapp.com/state"
+const apiUrl = "http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/"
 
 const styles = StyleSheet.create({
   container: {
