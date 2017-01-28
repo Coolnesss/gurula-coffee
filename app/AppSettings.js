@@ -23,7 +23,7 @@ class AppSettings extends Component {
     AsyncStorage.getItem("update").then((value) => {
         if (value === "true") {
           this.setState({update: true});
-          this.setTimedUpdates();
+          //this.setTimedUpdates();
         } else if (value === "false") {
           this.setState({update: false});
         }
@@ -70,9 +70,9 @@ class AppSettings extends Component {
 
     this.setState({update: !this.state.update}, () => {
       if (this.state.update) {
-        this.setTimedUpdates();
+        //this.setTimedUpdates();
       } else {
-        this.clearInterval();
+        //this.clearInterval();
       }
     });
   }
