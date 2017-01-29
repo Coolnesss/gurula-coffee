@@ -37,13 +37,15 @@ const styles = StyleSheet.create({
   checkButtonBackground: {
     flex: 1,
     height: 40,
-    borderRadius: 20
+    borderRadius: 4
   },
   checkButtonLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
     color: 'white'
   },
-  howItWorks: {
-    alignItems: 'flex-end'
+  wrongResult: {
+    fontSize: 16
   }
 });
 
@@ -97,7 +99,7 @@ export default class Content extends Component {
                               spinner: true,
                             },
                             success: {
-                              text: this.state.response,
+                              text: this.state.response + " cups of coffee",
                               onPress: this.checkCoffeeState,
                               backgroundColor: '#339944'
                             }
@@ -106,6 +108,11 @@ export default class Content extends Component {
                           />
                         <Text style={styles.response}> </Text>
                       </View>
+                      <Text
+                        style={styles.wrongResult}
+                        onPress={() => Actions.wrongResult()}>
+                        Wrong result?
+                      </Text>
                       <View style={styles.button}>
                         <AwesomeButton
                           backgroundStyle={styles.checkButtonBackground}

@@ -13,7 +13,7 @@ const HowItWorks = () => {
         How does it work?
       </Text>
       <Text style={styles.body}>
-        We're using an algorithm called k-NN to figure out how much coffee there is currently in the Gurula pan by looking at the camera. You can check the camera image to verify the algorithm's results. Any ideas and contributions are welcome at
+        We're using machine learning to figure out how much coffee there is currently in the Gurula pan by looking at the camera. You can check the camera image to verify the algorithm's results. Any ideas and contributions are welcome at
       </Text>
       <Text style={styles.address}>
         https://github.com/Coolnesss/coffee-api

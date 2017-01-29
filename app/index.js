@@ -9,6 +9,7 @@ import SettingsScreen from './SettingsScreen';
 import Content from './Content';
 import CoffeePic from './CoffeePic';
 import HowItWorks from './HowItWorks';
+import WrongResult from './WrongResult';
 
 console.disableYellowBox = true;
 
@@ -34,6 +35,10 @@ const App = () => {
             title=""
             initial
           />
+        <Scene key="wrongResult"
+              component={WrongResult}
+              title=""
+            />
           <Scene key="coffeePic"
               component={CoffeePic}
               title=""
