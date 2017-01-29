@@ -38,15 +38,15 @@ const App = () => {
               component={CoffeePic}
               title=""
             />
-          <Scene key="howItWorks"
-            component={HowItWorks}
-            title=""
-          />
           </Scene>
         <Scene key="settingsTab" title="Settings" icon={TabIcon}>
             <Scene
               key="settingsScreen"
               component={SettingsScreen}
+              title=""
+            />
+            <Scene key="howItWorks"
+              component={HowItWorks}
               title=""
             />
           </Scene>

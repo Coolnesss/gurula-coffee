@@ -1,21 +1,15 @@
 'use strict';
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Picker, AppState, Platform, Button, Image, AsyncStorage } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import SettingsList from 'react-native-settings-list';
-import BackgroundTimer from 'react-native-background-timer';
-import PushNotification from 'react-native-push-notification';
 import PushController from './PushController';
-
-const timerInterval = 60000;
-const apiUrl = "http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/"
 
 class AppSettings extends Component {
 
   constructor() {
     super();
     this.toggleUpdateState = this.toggleUpdateState.bind(this);
-    this.setTimedUpdates = this.setTimedUpdates.bind(this);
-    this.clearInterval = this.clearInterval.bind(this);
     this.state = {update: false};
   }
 
@@ -23,42 +17,10 @@ class AppSettings extends Component {
     AsyncStorage.getItem("update").then((value) => {
         if (value === "true") {
           this.setState({update: true});
-          //this.setTimedUpdates();
         } else if (value === "false") {
           this.setState({update: false});
         }
     }).done();
-  }
-
-  notifyCoffeeState() {
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        let date = new Date(Date.now() + (1000));
-
-        PushNotification.cancelAllLocalNotifications();
-
-        PushNotification.localNotification({
-          message: "Coffee status: " + responseJson.state,
-          bigText: "State of coffee is " + responseJson.state,
-          subText: "Coffee notification"
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  setTimedUpdates() {
-    const intervalId = BackgroundTimer.setInterval(() => {
-      this.notifyCoffeeState();
-    }, timerInterval);
-
-    this.setState({intervalId: intervalId});
-  }
-
-  clearInterval() {
-    BackgroundTimer.clearInterval(this.state.intervalId);
   }
 
   toggleUpdateState() {
@@ -67,14 +29,7 @@ class AppSettings extends Component {
     } else {
       AsyncStorage.setItem("update", "false");
     }
-
-    this.setState({update: !this.state.update}, () => {
-      if (this.state.update) {
-        //this.setTimedUpdates();
-      } else {
-        //this.clearInterval();
-      }
-    });
+    this.setState({update: !this.state.update});
   }
 
 
@@ -92,9 +47,15 @@ class AppSettings extends Component {
               switchState={this.state.update}
               switchOnValueChange={this.toggleUpdateState}
               hasNavArrow={false}
-              title='Update in background (experimental)'
+              title='Receive notifications (beta)'
               titleStyle={{fontSize:16}}
             />
+          <SettingsList.Item
+            hasNavArrow={true}
+            title='How does it work'
+            titleStyle={{fontSize:16}}
+            onPress={() => Actions.howItWorks()}
+          />
           </SettingsList>
         </View>
         <PushController />

@@ -80,10 +80,6 @@ export default class Content extends Component {
           <Text style={styles.header}>
             Gurula Coffee Informer
           </Text>
-          <Text style={styles.welcome}>
-            Use this app to get a notification if there's coffee in Gurula.
-            You can also press the button to find out if there's coffee right now.
-          </Text>
             <View style={styles.button}>
             <AwesomeButton
                 backgroundStyle={styles.checkButtonBackground}
@@ -123,12 +119,6 @@ export default class Content extends Component {
                          }} />
                          <Text style={styles.response}> </Text>
                      </View>
-                     <View>
-                       <Text
-                         onPress={() => Actions.howItWorks()}>
-                         How does it work?
-                       </Text>
-                    </View>
                     <PushController />
         </View>
     );
