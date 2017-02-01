@@ -55,6 +55,7 @@ export default class Content extends Component {
 
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.checkCoffeeState = this.checkCoffeeState.bind(this);
+    this.parseResponse = this.parseResponse.bind(this);
 
     this.state = {
       response: "",
@@ -74,6 +75,14 @@ export default class Content extends Component {
     if (appState === 'active') {
       this.checkCoffeeState();
     }
+  }
+
+  parseResponse() {
+    let response = this.state.response;
+    if (response === "NO LIGHTS") {
+      return "The lights don't seem to be on in Gurula.";
+    }
+    return this.state.response + " cups of coffee";
   }
 
   render() {
@@ -99,7 +108,7 @@ export default class Content extends Component {
                               spinner: true,
                             },
                             success: {
-                              text: this.state.response + " cups of coffee",
+                              text: this.parseResponse(),
                               onPress: this.checkCoffeeState,
                               backgroundColor: '#339944'
                             }

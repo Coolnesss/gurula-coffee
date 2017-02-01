@@ -10,6 +10,7 @@ import Content from './Content';
 import CoffeePic from './CoffeePic';
 import HowItWorks from './HowItWorks';
 import WrongResult from './WrongResult';
+import QuietHours from './QuietHours';
 
 console.disableYellowBox = true;
 
@@ -54,6 +55,10 @@ const App = () => {
               component={HowItWorks}
               title=""
             />
+          <Scene key="quietHours"
+            component={QuietHours}
+            title=""
+          />
           </Scene>
         </Scene>
       </Scene>

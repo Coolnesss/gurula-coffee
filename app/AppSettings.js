@@ -13,7 +13,7 @@ class AppSettings extends Component {
     this.state = {update: false};
   }
 
-  componentDidMount() {
+  componentWillMount() {
     AsyncStorage.getItem("update").then((value) => {
         if (value === "true") {
           this.setState({update: true});
@@ -42,20 +42,30 @@ class AppSettings extends Component {
         <View style={{backgroundColor:'#EFEFF4',flex:1}}>
           <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
             <SettingsList.Header headerStyle={{marginTop:15}}/>
-            <SettingsList.Item
-              hasSwitch={true}
-              switchState={this.state.update}
-              switchOnValueChange={this.toggleUpdateState}
-              hasNavArrow={false}
-              title='Receive notifications (beta)'
-              titleStyle={{fontSize:16}}
-            />
-          <SettingsList.Item
-            hasNavArrow={true}
-            title='How does it work'
-            titleStyle={{fontSize:16}}
-            onPress={() => Actions.howItWorks()}
-          />
+
+            <SettingsList.Header headerText='Notifications' />
+              <SettingsList.Item
+                hasSwitch={true}
+                switchState={this.state.update}
+                switchOnValueChange={this.toggleUpdateState}
+                hasNavArrow={false}
+                title='Receive notifications (beta)'
+                titleStyle={{fontSize:16}}
+              />
+              <SettingsList.Item
+                hasNavArrow={true}
+                title='Set quiet hours'
+                titleStyle={{fontSize:16}}
+                onPress={() => Actions.quietHours()}
+              />
+
+            <SettingsList.Header headerText='Misc'/>
+              <SettingsList.Item
+                hasNavArrow={true}
+                title='How does it work'
+                titleStyle={{fontSize:16}}
+                onPress={() => Actions.howItWorks()}
+              />
           </SettingsList>
         </View>
         <PushController />

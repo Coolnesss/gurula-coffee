@@ -12,7 +12,7 @@ import { Kaede } from 'react-native-textinput-effects';
 import { Actions } from 'react-native-router-flux';
 
 
-const apiUrl = "http://10.0.2.2:3000/"
+const apiUrl = "http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/"
 
 export default class WrongResult extends Component {
 
@@ -129,7 +129,7 @@ export default class WrongResult extends Component {
                              },
                              success: {
                                text: "Done",
-                               onPress: () => Actions.content(),
+                               onPress: () => Actions.pop(),
                                backgroundColor: '#339944'
                              },
                              fail: {
