@@ -7,6 +7,7 @@ import {
   AsyncStorage
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
+var renderIf = require('render-if');
 
 
 export default class QuietHours extends Component {
@@ -17,18 +18,21 @@ export default class QuietHours extends Component {
 
     this.state = {
       start: null,
-      end: null
+      end: null,
+      update: null
     }
   }
 
   componentWillMount() {
-    AsyncStorage.multiGet(["start", "end"]).then((values) => {
+    AsyncStorage.multiGet(["start", "end", "update"]).then((values) => {
       let start = values[0][1];
       let end = values[1][1];
+      let update = values[2][1];
 
       this.setState({
         start,
-        end
+        end,
+        update: eval(update)
       });
     });
   }
@@ -45,11 +49,15 @@ export default class QuietHours extends Component {
       <View style={styles.container}>
         <Text style={styles.header}>Select your quiet hours</Text>
         <Text style={styles.text}>You won't be notified of coffee during this time{"\n"}</Text>
+          {renderIf(!this.state.update)(
+            <Text style={styles.disabled}>Notifications are disabled</Text>
+          )}
         <View style={styles.timepickers}>
           <DatePicker
             style={{width: 200}}
             date={this.state.start}
             mode="time"
+            disabled={!this.state.update}
             format="HH:mm"
             placeholder="Select start time"
             confirmBtnText="Confirm"
@@ -63,6 +71,7 @@ export default class QuietHours extends Component {
             date={this.state.end}
             mode="time"
             format="HH:mm"
+            disabled={!this.state.update}
             placeholder="Select end time"
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
@@ -95,5 +104,8 @@ const styles = StyleSheet.create({
   timepickers: {
     alignItems: 'flex-end',
     paddingTop: 50
+  },
+  disabled: {
+    fontSize: 10
   }
 });

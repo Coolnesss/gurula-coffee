@@ -12,7 +12,6 @@ export default class PushController extends Component {
   }
 
   notifyUser(message) {
-
     AsyncStorage.multiGet(["update", "start", "end"]).then((values) => {
       // User doesn't want notifications
       if (values[0][1] === "false") return;

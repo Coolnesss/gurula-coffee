@@ -73987,7 +73987,9 @@ __d(/* react-native-settings-list/img/icon-arrow-settings.png */function(global,
 }, 450, null, "react-native-settings-list/img/icon-arrow-settings.png");
 __d(/* GurulaCoffee/app/PushController.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
-var _reactNativeFcm=require(452 /* react-native-fcm */);var _reactNativeFcm2=babelHelpers.interopRequireDefault(_reactNativeFcm);var
+var _reactNativeFcm=require(452 /* react-native-fcm */);var _reactNativeFcm2=babelHelpers.interopRequireDefault(_reactNativeFcm);
+var moment=require(478 /* moment */);var
+
 
 PushController=function(_Component){babelHelpers.inherits(PushController,_Component);
 
@@ -73997,33 +73999,32 @@ _this.notifyUser=_this.notifyUser.bind(_this);return _this;
 }babelHelpers.createClass(PushController,[{key:'notifyUser',value:function notifyUser(
 
 message){
+
 _reactNative.AsyncStorage.multiGet(["update","start","end"]).then(function(values){
 
+if(values[0][1]==="false")return;
 
-if(values[0][1]==="true")return;
 
-var start=values[1][1];
-var end=values[2][1];
-var current=new Date().getHours()+":"+new Date().getMinutes();
+var current=moment().format('HH:MM');
+var start=moment().format(values[1][1]);
+var end=moment().format(values[2][1]);
 
-if(current<start&&current>end){
+
+if(!values[1][1]||!values[2][1]||current<start&&current>end){
 _reactNativeFcm2.default.removeAllDeliveredNotifications();
 _reactNativeFcm2.default.presentLocalNotification({
-title:"topkek",
+title:"Coffee is ready",
 body:message+" cups available right now!"});
 
 }
 });
-return true;
 }},{key:'componentDidMount',value:function componentDidMount()
 
 
 {var _this2=this;
-_reactNativeFcm2.default.removeAllDeliveredNotifications();
 if(this.notificationListener)this.notificationListener.remove();
 
 this.notificationListener=_reactNativeFcm2.default.on('notification',function(notif){
-
 if(!notif.local_notification){
 _this2.notifyUser(notif.coffee);
 }
@@ -74137,3273 +74138,6 @@ RNFIRMessaging.send(senderId,payload);
 
 module.exports=FCM;
 }, 452, null, "react-native-fcm/index.js");
-__d(/* GurulaCoffee/app/Content.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNativeRouterFlux=require(400 /* react-native-router-flux */);
-var _reactNative=require(42 /* react-native */);
-var _PushController=require(451 /* ./PushController */);var _PushController2=babelHelpers.interopRequireDefault(_PushController);
-var _reactNativePushNotification=require(454 /* react-native-push-notification */);var _reactNativePushNotification2=babelHelpers.interopRequireDefault(_reactNativePushNotification);
-var _reactNativeAwesomeButton=require(456 /* react-native-awesome-button */);var _reactNativeAwesomeButton2=babelHelpers.interopRequireDefault(_reactNativeAwesomeButton);
-
-var apiUrl="http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/";
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-flex:1,
-justifyContent:'center',
-alignItems:'center',
-backgroundColor:'#F5FCFF'},
-
-welcome:{
-fontSize:20,
-textAlign:'center',
-margin:10},
-
-header:{
-fontSize:40,
-textAlign:'center',
-fontWeight:'bold'},
-
-response:{
-fontSize:30,
-textAlign:'center',
-fontWeight:'bold',
-color:'#841584'},
-
-button:{
-flexDirection:'row',
-margin:20},
-
-checkButtonBackground:{
-flex:1,
-height:40,
-borderRadius:4},
-
-checkButtonLabel:{
-fontSize:16,
-fontWeight:'bold',
-color:'white'},
-
-wrongResult:{
-fontSize:16}});var
-
-
-
-Content=function(_Component){babelHelpers.inherits(Content,_Component);
-function Content(props){babelHelpers.classCallCheck(this,Content);var _this=babelHelpers.possibleConstructorReturn(this,(Content.__proto__||Object.getPrototypeOf(Content)).call(this,
-props));
-
-_this.handleAppStateChange=_this.handleAppStateChange.bind(_this);
-_this.checkCoffeeState=_this.checkCoffeeState.bind(_this);
-_this.parseResponse=_this.parseResponse.bind(_this);
-
-_this.state={
-response:"",
-buttonState:'idle'};return _this;
-
-}babelHelpers.createClass(Content,[{key:'componentDidMount',value:function componentDidMount()
-
-{
-_reactNative.AppState.addEventListener('change',this.handleAppStateChange);
-}},{key:'componentWillUnmount',value:function componentWillUnmount()
-
-{
-_reactNative.AppState.removeEventListener('change',this.handleAppStateChange);
-}},{key:'handleAppStateChange',value:function handleAppStateChange(
-
-appState){
-if(appState==='active'){
-this.checkCoffeeState();
-}
-}},{key:'parseResponse',value:function parseResponse()
-
-{
-var response=this.state.response;
-if(response==="NO LIGHTS"){
-return"The lights don't seem to be on in Gurula.";
-}
-return this.state.response+" cups of coffee";
-}},{key:'render',value:function render()
-
-{
-return(
-_react2.default.createElement(_reactNative.View,{style:styles.container},
-_react2.default.createElement(_reactNative.Text,{style:styles.header},'Gurula Coffee Informer'),
-
-
-_react2.default.createElement(_reactNative.View,{style:styles.button},
-_react2.default.createElement(_reactNativeAwesomeButton2.default,{
-backgroundStyle:styles.checkButtonBackground,
-labelStyle:styles.checkButtonLabel,
-transitionDuration:200,
-states:{
-idle:{
-text:'Check for coffee',
-onPress:this.checkCoffeeState,
-backgroundColor:'#1155DD'},
-
-busy:{
-text:'Checking',
-backgroundColor:'#002299',
-spinner:true},
-
-success:{
-text:this.parseResponse(),
-onPress:this.checkCoffeeState,
-backgroundColor:'#339944'}},
-
-
-buttonState:this.state.buttonState}),
-
-_react2.default.createElement(_reactNative.Text,{style:styles.response},' ')),
-
-_react2.default.createElement(_reactNative.Text,{
-style:styles.wrongResult,
-onPress:function onPress(){return _reactNativeRouterFlux.Actions.wrongResult();}},'Wrong result?'),
-
-
-_react2.default.createElement(_reactNative.View,{style:styles.button},
-_react2.default.createElement(_reactNativeAwesomeButton2.default,{
-backgroundStyle:styles.checkButtonBackground,
-labelStyle:styles.checkButtonLabel,
-states:{
-default:{
-text:'See the camera photo',
-onPress:function onPress(){return _reactNativeRouterFlux.Actions.coffeePic();},
-backgroundColor:'#1155DD'}}}),
-
-
-_react2.default.createElement(_reactNative.Text,{style:styles.response},' ')),
-
-_react2.default.createElement(_PushController2.default,null)));
-
-
-}},{key:'checkCoffeeState',value:function checkCoffeeState()
-
-{var _this2=this;
-this.setState({buttonState:"busy"});
-fetch(apiUrl).
-then(function(response){return response.json();}).
-then(function(responseJson){
-_this2.setState({
-response:responseJson.state,
-buttonState:"success"});
-
-}).
-catch(function(error){
-console.error(error);
-});
-}}]);return Content;}(_react.Component);exports.default=Content;
-}, 453, null, "GurulaCoffee/app/Content.js");
-__d(/* react-native-push-notification/index.js */function(global, require, module, exports) {
-
-
-
-'use strict';
-
-var RNNotificationsComponent=require(455 /* ./component */);
-
-var AppState=RNNotificationsComponent.state;
-var RNNotifications=RNNotificationsComponent.component;
-
-var Platform=require(42 /* react-native */).Platform;
-
-var Notifications={
-handler:RNNotifications,
-onRegister:false,
-onError:false,
-onNotification:false,
-onRemoteFetch:false,
-isLoaded:false,
-hasPoppedInitialNotification:false,
-
-isPermissionsRequestPending:false,
-
-permissions:{
-alert:true,
-badge:true,
-sound:true}};
-
-
-
-Notifications.callNative=function(name,params){
-if(typeof this.handler[name]==='function'){var _handler;
-if(typeof params!=='array'&&
-typeof params!=='object'){
-params=[];
-}
-
-return(_handler=this.handler)[name].apply(_handler,babelHelpers.toConsumableArray(params));
-}else{
-return null;
-}
-};
-
-
-
-
-
-
-
-
-
-
-Notifications.configure=function(options){
-if(typeof options.onRegister!=='undefined'){
-this.onRegister=options.onRegister;
-}
-
-if(typeof options.onError!=='undefined'){
-this.onError=options.onError;
-}
-
-if(typeof options.onNotification!=='undefined'){
-this.onNotification=options.onNotification;
-}
-
-if(typeof options.permissions!=='undefined'){
-this.permissions=options.permissions;
-}
-
-if(typeof options.senderID!=='undefined'){
-this.senderID=options.senderID;
-}
-
-if(typeof options.onRemoteFetch!=='undefined'){
-this.onRemoteFetch=options.onRemoteFetch;
-}
-
-if(this.isLoaded===false){
-this._onRegister=this._onRegister.bind(this);
-this._onNotification=this._onNotification.bind(this);
-this._onRemoteFetch=this._onRemoteFetch.bind(this);
-this.callNative('addEventListener',['register',this._onRegister]);
-this.callNative('addEventListener',['notification',this._onNotification]);
-this.callNative('addEventListener',['localNotification',this._onNotification]);
-Platform.OS==='android'?this.callNative('addEventListener',['remoteFetch',this._onRemoteFetch]):null;
-
-this.isLoaded=true;
-}
-
-if(this.hasPoppedInitialNotification===false&&(
-options.popInitialNotification===undefined||options.popInitialNotification===true)){
-this.popInitialNotification(function(firstNotification){
-if(firstNotification!==null){
-this._onNotification(firstNotification,true);
-}
-}.bind(this));
-this.hasPoppedInitialNotification=true;
-}
-
-if(options.requestPermissions!==false){
-this._requestPermissions();
-}
-
-};
-
-
-Notifications.unregister=function(){
-this.callNative('removeEventListener',['register',this._onRegister]);
-this.callNative('removeEventListener',['notification',this._onNotification]);
-this.callNative('removeEventListener',['localNotification',this._onNotification]);
-Platform.OS==='android'?this.callNative('removeEventListener',['remoteFetch',this._onRemoteFetch]):null;
-this.isLoaded=false;
-};
-
-
-
-
-
-
-
-
-
-Notifications.localNotification=function(details){
-if(Platform.OS==='ios'){
-
-
-var soundName=details.soundName?details.soundName:'default';
-
-if(details.hasOwnProperty('playSound')&&!details.playSound){
-soundName='';
-}
-
-
-
-
-this.handler.presentLocalNotification({
-alertTitle:details.title,
-alertBody:details.message,
-alertAction:details.alertAction,
-category:details.category,
-soundName:soundName,
-applicationIconBadgeNumber:details.number,
-userInfo:details.userInfo});
-
-}else{
-this.handler.presentLocalNotification(details);
-}
-};
-
-
-
-
-
-
-Notifications.localNotificationSchedule=function(details){
-if(Platform.OS==='ios'){
-this.handler.scheduleLocalNotification({
-fireDate:details.date.toISOString(),
-alertBody:details.message,
-userInfo:details.userInfo});
-
-}else{
-details.fireDate=details.date.getTime();
-delete details.date;
-this.handler.scheduleLocalNotification(details);
-}
-};
-
-
-Notifications._onRegister=function(token){
-if(this.onRegister!==false){
-this.onRegister({
-token:token,
-os:Platform.OS});
-
-}
-};
-
-Notifications._onRemoteFetch=function(notificationData){
-if(this.onRemoteFetch!==false){
-this.onRemoteFetch(notificationData);
-}
-};
-
-Notifications._onNotification=function(data){var isFromBackground=arguments.length>1&&arguments[1]!==undefined?arguments[1]:null;
-if(isFromBackground===null){
-isFromBackground=
-data.foreground===false||
-AppState.currentState==='background';
-
-}
-
-if(this.onNotification!==false){
-if(Platform.OS==='ios'){
-this.onNotification({
-foreground:!isFromBackground,
-userInteraction:isFromBackground,
-message:data.getMessage(),
-data:data.getData(),
-badge:data.getBadgeCount(),
-alert:data.getAlert(),
-sound:data.getSound()});
-
-}else{
-var notificationData=babelHelpers.extends({
-foreground:!isFromBackground},
-data);
-
-
-if(typeof notificationData.data==='string'){
-try{
-notificationData.data=JSON.parse(notificationData.data);
-}catch(e){
-
-}
-}
-
-this.onNotification(notificationData);
-}
-}
-};
-
-
-Notifications._onPermissionResult=function(){
-this.isPermissionsRequestPending=false;
-};
-
-
-Notifications._requestPermissions=function(){
-if(Platform.OS==='ios'){
-if(this.isPermissionsRequestPending===false){
-this.isPermissionsRequestPending=true;
-return this.callNative('requestPermissions',[this.permissions]).
-then(this._onPermissionResult.bind(this)).
-catch(this._onPermissionResult.bind(this));
-}
-}else if(typeof this.senderID!=='undefined'){
-return this.callNative('requestPermissions',[this.senderID]);
-}
-};
-
-
-Notifications.requestPermissions=function(){
-if(Platform.OS==='ios'){
-return this.callNative('requestPermissions',[this.permissions]);
-}else if(typeof this.senderID!=='undefined'){
-return this.callNative('requestPermissions',[this.senderID]);
-}
-};
-
-
-Notifications.presentLocalNotification=function(){
-return this.callNative('presentLocalNotification',arguments);
-};
-
-Notifications.scheduleLocalNotification=function(){
-return this.callNative('scheduleLocalNotification',arguments);
-};
-
-Notifications.cancelLocalNotifications=function(){
-return this.callNative('cancelLocalNotifications',arguments);
-};
-
-Notifications.cancelAllLocalNotifications=function(){
-return this.callNative('cancelAllLocalNotifications',arguments);
-};
-
-Notifications.setApplicationIconBadgeNumber=function(){
-return this.callNative('setApplicationIconBadgeNumber',arguments);
-};
-
-Notifications.getApplicationIconBadgeNumber=function(){
-return this.callNative('getApplicationIconBadgeNumber',arguments);
-};
-
-Notifications.popInitialNotification=function(handler){
-this.callNative('getInitialNotification').then(function(result){
-handler(result);
-});
-};
-
-Notifications.abandonPermissions=function(){
-return this.callNative('abandonPermissions',arguments);
-};
-
-Notifications.checkPermissions=function(){
-return this.callNative('checkPermissions',arguments);
-};
-
-Notifications.registerNotificationActions=function(){
-return this.callNative('registerNotificationActions',arguments);
-};
-
-Notifications.clearAllNotifications=function(){
-
-return this.callNative('clearAllNotifications',arguments);
-};
-
-module.exports=Notifications;
-}, 454, null, "react-native-push-notification/index.js");
-__d(/* react-native-push-notification/component/index.android.js */function(global, require, module, exports) {'use strict';var _require=
-
-
-
-
-require(42 /* react-native */),NativeModules=_require.NativeModules,DeviceEventEmitter=_require.DeviceEventEmitter;
-
-var RNPushNotification=NativeModules.RNPushNotification;
-var _notifHandlers=new Map();
-
-var DEVICE_NOTIF_EVENT='remoteNotificationReceived';
-var NOTIF_REGISTER_EVENT='remoteNotificationsRegistered';
-var REMOTE_FETCH_EVENT='remoteFetch';
-
-var NotificationsComponent=function NotificationsComponent(){
-
-};
-
-NotificationsComponent.prototype.getInitialNotification=function(){
-return RNPushNotification.getInitialNotification().
-then(function(notification){
-if(notification&&notification.dataJSON){
-return JSON.parse(notification.dataJSON);
-}
-return null;
-});
-};
-
-NotificationsComponent.prototype.requestPermissions=function(senderID){
-RNPushNotification.requestPermissions(senderID);
-};
-
-NotificationsComponent.prototype.cancelLocalNotifications=function(details){
-RNPushNotification.cancelLocalNotifications(details);
-};
-
-NotificationsComponent.prototype.cancelAllLocalNotifications=function(){
-RNPushNotification.cancelAllLocalNotifications();
-};
-
-NotificationsComponent.prototype.presentLocalNotification=function(details){
-RNPushNotification.presentLocalNotification(details);
-};
-
-NotificationsComponent.prototype.scheduleLocalNotification=function(details){
-RNPushNotification.scheduleLocalNotification(details);
-};
-
-NotificationsComponent.prototype.setApplicationIconBadgeNumber=function(number){
-if(!RNPushNotification.setApplicationIconBadgeNumber){
-return;
-}
-RNPushNotification.setApplicationIconBadgeNumber(number);
-};
-
-NotificationsComponent.prototype.abandonPermissions=function(){
-
-};
-
-NotificationsComponent.prototype.checkPermissions=function(callback){
-
-};
-
-NotificationsComponent.prototype.addEventListener=function(type,handler){
-var listener;
-if(type==='notification'){
-listener=DeviceEventEmitter.addListener(
-DEVICE_NOTIF_EVENT,
-function(notifData){
-var data=JSON.parse(notifData.dataJSON);
-handler(data);
-});
-
-}else if(type==='register'){
-listener=DeviceEventEmitter.addListener(
-NOTIF_REGISTER_EVENT,
-function(registrationInfo){
-handler(registrationInfo.deviceToken);
-});
-
-}else if(type==='remoteFetch'){
-listener=DeviceEventEmitter.addListener(
-REMOTE_FETCH_EVENT,
-function(notifData){
-var notificationData=JSON.parse(notifData.dataJSON);
-handler(notificationData);
-});
-
-}
-
-_notifHandlers.set(handler,listener);
-};
-
-NotificationsComponent.prototype.removeEventListener=function(type,handler){
-var listener=_notifHandlers.get(handler);
-if(!listener){
-return;
-}
-listener.remove();
-_notifHandlers.delete(handler);
-};
-
-NotificationsComponent.prototype.registerNotificationActions=function(details){
-RNPushNotification.registerNotificationActions(details);
-};
-
-NotificationsComponent.prototype.clearAllNotifications=function(){
-RNPushNotification.clearAllNotifications();
-};
-
-module.exports={
-state:false,
-component:new NotificationsComponent()};
-}, 455, null, "react-native-push-notification/component/index.android.js");
-__d(/* react-native-awesome-button/index.js */function(global, require, module, exports) {var AwesomeButton=require(457 /* ./src/AwesomeButton.js */);
-
-module.exports=AwesomeButton;
-}, 456, null, "react-native-awesome-button/index.js");
-__d(/* react-native-awesome-button/src/AwesomeButton.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-var _ProgressBar=require(458 /* ./ProgressBar */);var _ProgressBar2=babelHelpers.interopRequireDefault(_ProgressBar);var
-
-InnerButtonView=function(_Component){babelHelpers.inherits(InnerButtonView,_Component);function InnerButtonView(){babelHelpers.classCallCheck(this,InnerButtonView);return babelHelpers.possibleConstructorReturn(this,(InnerButtonView.__proto__||Object.getPrototypeOf(InnerButtonView)).apply(this,arguments));}babelHelpers.createClass(InnerButtonView,[{key:'render',value:function render()
-{
-return(
-_react2.default.createElement(_reactNative.View,{style:styles.insideView},
-this.props.currentStateObject.spinner?_react2.default.createElement(_ProgressBar2.default,{color:this.props.spinnerColor,style:styles.activityIndicator}):null,
-_react2.default.createElement(_reactNative.Text,{style:this.props.labelStyle},this.props.currentStateObject.text)));
-
-
-}}]);return InnerButtonView;}(_react.Component);var
-
-
-
-AwesomeButton=function(_Component2){babelHelpers.inherits(AwesomeButton,_Component2);
-
-
-
-function AwesomeButton(props){babelHelpers.classCallCheck(this,AwesomeButton);var _this2=babelHelpers.possibleConstructorReturn(this,(AwesomeButton.__proto__||Object.getPrototypeOf(AwesomeButton)).call(this,
-props));
-var currentStateObject=_this2.props.states[_this2.props.buttonState]||_this2.getDefaultStateObject();
-_this2.state={
-backgroundColor:new _reactNative.Animated.Value(0),
-startColor:_this2.hexToRgb(currentStateObject.backgroundColor),
-endColor:_this2.hexToRgb(currentStateObject.backgroundColor)};return _this2;
-
-}babelHelpers.createClass(AwesomeButton,[{key:'componentWillReceiveProps',value:function componentWillReceiveProps(
-
-nextProps){
-var currentStateObject=this.props.states[this.props.buttonState]||this.getDefaultStateObject();
-var nextStateObject=nextProps.states[nextProps.buttonState]||this.getDefaultStateObject();
-this.setState({backgroundColor:new _reactNative.Animated.Value(0),startColor:this.hexToRgb(currentStateObject.backgroundColor),endColor:this.hexToRgb(nextStateObject.backgroundColor)});
-}},{key:'componentDidUpdate',value:function componentDidUpdate()
-
-{
-this.startAnimation();
-}},{key:'hexToRgb',value:function hexToRgb(
-
-hex){
-var shorthandRegex=/^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-hex=hex.replace(shorthandRegex,function(m,r,g,b){
-return r+r+g+g+b+b;
-});
-var result=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-return result?'rgb('+parseInt(result[1],16)+', '+parseInt(result[2],16)+', '+parseInt(result[3],16)+')':null;
-}},{key:'startAnimation',value:function startAnimation()
-
-{
-_reactNative.Animated.timing(this.state.backgroundColor,
-{
-toValue:1,
-duration:this.props.transitionDuration}).
-start();
-}},{key:'getDefaultStateObject',value:function getDefaultStateObject()
-
-{
-return(
-this.props.states[Object.keys(this.props.states)[0]]);
-
-}},{key:'render',value:function render()
-
-{
-var currentStateObject=this.props.states[this.props.buttonState]||this.getDefaultStateObject();
-
-var bgColor=this.state.backgroundColor.interpolate({
-inputRange:[0,1],
-outputRange:[this.state.startColor,this.state.endColor]});
-
-
-if(currentStateObject.onPress){
-return(
-_react2.default.createElement(_reactNative.TouchableOpacity,{style:{flex:1},activeOpacity:this.props.activeOpacity,onPress:currentStateObject.onPress},
-_react2.default.createElement(_reactNative.Animated.View,{style:[this.props.backgroundStyle,{backgroundColor:bgColor}]},
-_react2.default.createElement(InnerButtonView,{currentStateObject:currentStateObject,labelStyle:this.props.labelStyle,spinnerColor:this.props.spinnerColor}))));
-
-
-
-}else{
-return(
-_react2.default.createElement(_reactNative.Animated.View,{style:[this.props.backgroundStyle,{backgroundColor:bgColor}]},
-_react2.default.createElement(InnerButtonView,{currentStateObject:currentStateObject,labelStyle:this.props.labelStyle,spinnerColor:this.props.spinnerColor})));
-
-
-}
-}}]);return AwesomeButton;}(_react.Component);AwesomeButton.propTypes={states:_react.PropTypes.object.isRequired};exports.default=AwesomeButton;
-
-
-
-AwesomeButton.defaultProps={
-backgroundStyle:{
-flex:1,
-height:40,
-backgroundColor:'#477CCC',
-borderRadius:20},
-
-labelStyle:{
-color:'#FFFFFF'},
-
-spinnerColor:'#FFFFFF',
-transitionDuration:250,
-activeOpacity:0.92};
-
-
-
-var styles=_reactNative.StyleSheet.create({
-insideView:{
-flex:1,
-flexDirection:'row',
-alignItems:'center',
-alignSelf:'center'},
-
-activityIndicator:{
-marginRight:8},
-
-container:{
-flex:1}});
-}, 457, null, "react-native-awesome-button/src/AwesomeButton.js");
-__d(/* react-native-awesome-button/src/ProgressBar.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-
-var _reactNative=require(42 /* react-native */);var
-
-
-
-
-
-ProgressBar=function(_Component){babelHelpers.inherits(ProgressBar,_Component);function ProgressBar(){babelHelpers.classCallCheck(this,ProgressBar);return babelHelpers.possibleConstructorReturn(this,(ProgressBar.__proto__||Object.getPrototypeOf(ProgressBar)).apply(this,arguments));}babelHelpers.createClass(ProgressBar,[{key:'render',value:function render()
-{
-if(_reactNative.Platform.OS==='ios'){
-return(
-_react2.default.createElement(_reactNative.ActivityIndicatorIOS,{color:this.props.color,style:this.props.style}));
-
-}else{
-return(
-_react2.default.createElement(_reactNative.ProgressBarAndroid,{color:this.props.color,style:this.props.style,styleAttr:"Small"}));
-
-}
-}}]);return ProgressBar;}(_react.Component);exports.default=ProgressBar;
-}, 458, null, "react-native-awesome-button/src/ProgressBar.js");
-__d(/* GurulaCoffee/app/CoffeePic.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-var CoffeePic=function CoffeePic(){
-
-var coffeeUrl="http://gurula.wtf/kahvi/kahvi.jpg";
-coffeeUrl+='?random_number='+new Date().getTime();
-
-return(
-_react2.default.createElement(_reactNative.View,{style:styles.container},
-_react2.default.createElement(_reactNative.Image,{
-style:styles.image,
-source:{uri:coffeeUrl}})));
-
-
-
-};
-var styles=_reactNative.StyleSheet.create({
-container:{
-flex:1,
-alignItems:'stretch'},
-
-image:{
-flex:1}});exports.default=
-
-
-
-CoffeePic;
-}, 459, null, "GurulaCoffee/app/CoffeePic.js");
-__d(/* GurulaCoffee/app/HowItWorks.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-var HowItWorks=function HowItWorks(){
-return(
-_react2.default.createElement(_reactNative.View,{style:styles.container},
-_react2.default.createElement(_reactNative.Text,{style:styles.header},'How does it work?'),
-
-
-_react2.default.createElement(_reactNative.Text,{style:styles.body},'We\'re using machine learning to figure out how much coffee there is currently in the Gurula pan by looking at the camera. You can check the camera image to verify the algorithm\'s results. Any ideas and contributions are welcome at'),
-
-
-_react2.default.createElement(_reactNative.Text,{style:styles.address},'https://github.com/Coolnesss/coffee-api')));
-
-
-
-
-};
-var styles=_reactNative.StyleSheet.create({
-container:{
-flex:1,
-justifyContent:'center',
-alignItems:'center',
-backgroundColor:'#F5FCFF'},
-
-body:{
-fontSize:18,
-textAlign:'center',
-margin:5,
-fontWeight:'100'},
-
-header:{
-fontSize:40,
-textAlign:'center',
-fontWeight:'bold'},
-
-address:{
-fontSize:15,
-margin:5,
-borderRadius:5}});exports.default=
-
-
-
-HowItWorks;
-}, 460, null, "GurulaCoffee/app/HowItWorks.js");
-__d(/* GurulaCoffee/app/WrongResult.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-var _reactNativeAwesomeButton=require(456 /* react-native-awesome-button */);var _reactNativeAwesomeButton2=babelHelpers.interopRequireDefault(_reactNativeAwesomeButton);
-var _reactNativeTextinputEffects=require(462 /* react-native-textinput-effects */);
-var _reactNativeRouterFlux=require(400 /* react-native-router-flux */);
-
-
-var apiUrl="http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/";var
-
-WrongResult=function(_Component){babelHelpers.inherits(WrongResult,_Component);
-
-function WrongResult(props){babelHelpers.classCallCheck(this,WrongResult);var _this=babelHelpers.possibleConstructorReturn(this,(WrongResult.__proto__||Object.getPrototypeOf(WrongResult)).call(this,
-props));
-_this.onChange=_this.onChange.bind(_this);
-_this.postData=_this.postData.bind(_this);
-_this.scrollToBottom=_this.scrollToBottom.bind(_this);
-_this.contentHeight=0;
-_this.scrollViewHeight=0;
-_this.state={
-selected:0.0,
-response:"",
-buttonState:'idle'};return _this;
-
-}babelHelpers.createClass(WrongResult,[{key:'onChange',value:function onChange(
-
-text){
-var newText='';
-var numbers='0123456789.';
-
-for(var i=0;i<text.length;i++){
-if(numbers.indexOf(text[i])>-1){
-newText=newText+text[i];
-}
-}
-
-this.setState({selected:newText});
-}},{key:'postData',value:function postData()
-
-{var _this2=this;
-this.setState({buttonState:"busy"});
-fetch(apiUrl+"sample",{
-method:'POST',
-headers:{
-'Accept':'application/json',
-'Content-Type':'application/json'},
-
-body:JSON.stringify({
-sample:{
-label:this.state.selected}})}).
-
-
-then(function(response){return response.json();}).
-then(function(responseJson){
-_this2.setState({
-response:"OK",
-buttonState:"success"});
-
-}).
-catch(function(error){
-console.error(error);
-_this2.setState({
-buttonState:"fail"});
-
-});
-}},{key:'scrollToBottom',value:function scrollToBottom()
-
-{var animated=arguments.length>0&&arguments[0]!==undefined?arguments[0]:true;
-var scrollHeight=this.contentHeight-this.scrollViewHeight;
-if(scrollHeight>0){
-var scrollResponder=this.refs.scrollView.getScrollResponder();
-scrollResponder.scrollResponderScrollTo({x:0,y:scrollHeight,animated:animated});
-}
-}},{key:'render',value:function render()
-
-{var _this3=this;
-return(
-_react2.default.createElement(_reactNative.ScrollView,{
-ref:'scrollView',
-onContentSizeChange:function onContentSizeChange(w,h){return _this3.contentHeight=h;},
-onLayout:function onLayout(ev){return _this3.scrollViewHeight=ev.nativeEvent.layout.height;},
-style:styles.container,
-contentContainerStyle:styles.content},
-
-_react2.default.createElement(_reactNative.Text,{style:styles.title},'Wrong result?'),
-_react2.default.createElement(_reactNative.Text,{style:styles.subtext},'Step 1. Go to Gurula',
-"\n",'Step 2. Look at the coffee pan; there\'s a scale that shows the amount of coffee',
-"\n",'Step 3. Estimate how much coffee there is and if it\'s significantly different from the predicted amount, enter the correct amount here',
-"\n",'Step 4. Press submit.'),
-
-
-_react2.default.createElement(_reactNative.View,{style:[styles.card1]},
-_react2.default.createElement(_reactNativeTextinputEffects.Kaede,{
-onChangeText:function onChangeText(value){_this3.setState({selected:value});_this3.scrollToBottom();},
-style:styles.input,
-label:'Amount of coffee',
-labelStyle:{
-color:'white',
-backgroundColor:'#1155DD'},
-
-inputStyle:{
-color:'white',
-backgroundColor:'gray'},
-
-keyboardType:'numeric'})),
-
-
-_react2.default.createElement(_reactNative.View,{style:styles.button},
-_react2.default.createElement(_reactNativeAwesomeButton2.default,{
-backgroundStyle:styles.checkButtonBackground,
-labelStyle:styles.checkButtonLabel,
-transitionDuration:200,
-states:{
-idle:{
-text:'Submit',
-onPress:this.postData,
-backgroundColor:'#1155DD'},
-
-busy:{
-text:'Sending',
-backgroundColor:'#002299',
-spinner:true},
-
-success:{
-text:"Done",
-onPress:function onPress(){return _reactNativeRouterFlux.Actions.pop();},
-backgroundColor:'#339944'},
-
-fail:{
-text:"FAILED",
-backgroundColor:"red"}},
-
-
-buttonState:this.state.buttonState}),
-
-_react2.default.createElement(_reactNative.Text,{style:styles.response},' '))));
-
-
-
-
-}}]);return WrongResult;}(_react.Component);exports.default=WrongResult;
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-flex:1,
-paddingTop:70},
-
-content:{
-
-paddingBottom:300},
-
-card1:{
-paddingVertical:12},
-
-button:{
-padding:12},
-
-card2:{
-padding:16},
-
-input:{
-marginTop:4},
-
-title:{
-paddingBottom:16,
-textAlign:'center',
-color:'#404d5b',
-fontSize:40,
-fontWeight:'bold',
-opacity:0.8},
-
-subtext:{
-fontSize:20,
-padding:12},
-
-checkButtonLabel:{
-fontSize:16,
-fontWeight:'bold',
-color:'white'},
-
-checkButtonBackground:{
-borderRadius:4,
-height:40}});
-}, 461, null, "GurulaCoffee/app/WrongResult.js");
-__d(/* react-native-textinput-effects/lib/index.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.Fumi=exports.Sae=exports.Makiko=exports.Kohana=exports.Hideo=exports.Akira=exports.Madoka=exports.Isao=exports.Jiro=exports.Hoshi=exports.Kaede=undefined;var _Kaede=require(463 /* ./Kaede */);var _Kaede2=babelHelpers.interopRequireDefault(_Kaede);
-var _Hoshi=require(465 /* ./Hoshi */);var _Hoshi2=babelHelpers.interopRequireDefault(_Hoshi);
-var _Jiro=require(466 /* ./Jiro */);var _Jiro2=babelHelpers.interopRequireDefault(_Jiro);
-var _Isao=require(467 /* ./Isao */);var _Isao2=babelHelpers.interopRequireDefault(_Isao);
-var _Madoka=require(468 /* ./Madoka */);var _Madoka2=babelHelpers.interopRequireDefault(_Madoka);
-var _Akira=require(469 /* ./Akira */);var _Akira2=babelHelpers.interopRequireDefault(_Akira);
-var _Hideo=require(470 /* ./Hideo */);var _Hideo2=babelHelpers.interopRequireDefault(_Hideo);
-var _Kohana=require(471 /* ./Kohana */);var _Kohana2=babelHelpers.interopRequireDefault(_Kohana);
-var _Makiko=require(472 /* ./Makiko */);var _Makiko2=babelHelpers.interopRequireDefault(_Makiko);
-var _Sae=require(473 /* ./Sae */);var _Sae2=babelHelpers.interopRequireDefault(_Sae);
-var _Fumi=require(474 /* ./Fumi */);var _Fumi2=babelHelpers.interopRequireDefault(_Fumi);exports.
-
-
-Kaede=_Kaede2.default;exports.
-Hoshi=_Hoshi2.default;exports.
-Jiro=_Jiro2.default;exports.
-Isao=_Isao2.default;exports.
-Madoka=_Madoka2.default;exports.
-Akira=_Akira2.default;exports.
-Hideo=_Hideo2.default;exports.
-Kohana=_Kohana2.default;exports.
-Makiko=_Makiko2.default;exports.
-Sae=_Sae2.default;exports.
-Fumi=_Fumi2.default;
-}, 462, null, "react-native-textinput-effects/lib/index.js");
-__d(/* react-native-textinput-effects/lib/Kaede.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var PADDING=16;var
-
-Kaede=function(_BaseInput){babelHelpers.inherits(Kaede,_BaseInput);function Kaede(){babelHelpers.classCallCheck(this,Kaede);return babelHelpers.possibleConstructorReturn(this,(Kaede.__proto__||Object.getPrototypeOf(Kaede)).apply(this,arguments));}babelHelpers.createClass(Kaede,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-this.props,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,inputHeight=_props.height;var _state=
-this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
-var inputWidth=width*0.6;
-
-var flatLabelStyle=_reactNative.StyleSheet.flatten(labelStyle);
-var labelBackgroundColor='#EBEAEA';
-if(flatLabelStyle&&flatLabelStyle.backgroundColor){
-labelBackgroundColor=flatLabelStyle.backgroundColor;
-}
-
-return(
-_react2.default.createElement(_reactNative.View,{style:containerStyle,onLayout:this._onLayout},
-_react2.default.createElement(_reactNative.Animated.View,{style:{
-width:inputWidth,
-marginLeft:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[inputWidth*-1,0]})}},
-
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle,{height:inputHeight}],
-value:value,
-onBlur:this._onBlur,
-onFocus:this._onFocus,
-onChange:this._onChange,
-underlineColorAndroid:'transparent'}))),
-
-
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:{
-position:'absolute',
-justifyContent:'center',
-top:0,
-height:inputHeight,
-width:width,
-left:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[0,inputWidth]}),
-
-backgroundColor:labelBackgroundColor}},
-
-_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
-label)))));
-
-
-
-
-
-}}]);return Kaede;}(_BaseInput3.default);Kaede.propTypes={easing:_react.PropTypes.func,height:_react.PropTypes.number};Kaede.defaultProps={easing:_reactNative.Easing.bezier(0.2,1,0.3,1),height:60};exports.default=Kaede;
-
-
-var styles=_reactNative.StyleSheet.create({
-label:{
-marginHorizontal:PADDING,
-fontSize:16,
-fontWeight:'bold',
-color:'#6a7989'},
-
-textInput:{
-padding:PADDING,
-backgroundColor:'white',
-color:'black',
-fontSize:16,
-fontWeight:'bold'}});
-}, 463, null, "react-native-textinput-effects/lib/Kaede.js");
-__d(/* react-native-textinput-effects/lib/BaseInput.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-
-
-
-
-var _reactNative=require(42 /* react-native */);var
-
-
-
-
-
-BaseInput=function(_Component){babelHelpers.inherits(BaseInput,_Component);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function BaseInput(props,context){babelHelpers.classCallCheck(this,BaseInput);var _this=babelHelpers.possibleConstructorReturn(this,(BaseInput.__proto__||Object.getPrototypeOf(BaseInput)).call(this,
-props,context));
-
-_this._onLayout=_this._onLayout.bind(_this);
-_this._onChange=_this._onChange.bind(_this);
-_this._onBlur=_this._onBlur.bind(_this);
-_this._onFocus=_this._onFocus.bind(_this);
-_this.focus=_this.focus.bind(_this);
-
-var value=props.value||props.defaultValue;
-
-_this.state={
-value:value,
-focusedAnim:new _reactNative.Animated.Value(value?1:0)};return _this;
-
-}babelHelpers.createClass(BaseInput,[{key:'componentWillReceiveProps',value:function componentWillReceiveProps(
-
-newProps){
-var newValue=newProps.value;
-if(newProps.hasOwnProperty('value')&&newValue!==this.state.value){
-this.setState({
-value:newValue});
-
-
-
-
-var isFocused=this.refs.input.isFocused();
-if(!isFocused){
-var isActive=Boolean(newValue);
-if(isActive!==this.isActive){
-this._toggle(isActive);
-}
-}
-}
-}},{key:'_onLayout',value:function _onLayout(
-
-event){
-this.setState({
-width:event.nativeEvent.layout.width});
-
-}},{key:'_onChange',value:function _onChange(
-
-event){
-this.setState({
-value:event.nativeEvent.text});
-
-
-var onChange=this.props.onChange;
-if(onChange){
-onChange(event);
-}
-}},{key:'_onBlur',value:function _onBlur(
-
-event){
-if(!this.state.value){
-this._toggle(false);
-}
-
-var onBlur=this.props.onBlur;
-if(onBlur){
-onBlur(event);
-}
-}},{key:'_onFocus',value:function _onFocus(
-
-event){
-this._toggle(true);
-
-var onFocus=this.props.onFocus;
-if(onFocus){
-onFocus(event);
-}
-}},{key:'_toggle',value:function _toggle(
-
-isActive){
-this.isActive=isActive;
-_reactNative.Animated.timing(
-this.state.focusedAnim,{
-toValue:isActive?1:0,
-duration:this.props.animationDuration,
-easing:this.props.easing}).
-
-start();
-}},{key:'inputRef',value:function inputRef()
-
-
-
-{
-return this.refs.input;
-}},{key:'focus',value:function focus()
-
-{
-this.inputRef().focus();
-}},{key:'blur',value:function blur()
-
-{
-this.inputRef().blur();
-}},{key:'isFocused',value:function isFocused()
-
-{
-return this.inputRef().isFocused();
-}},{key:'clear',value:function clear()
-
-{
-this.inputRef().clear();
-}}]);return BaseInput;}(_react.Component);BaseInput.propTypes={label:_react.PropTypes.string,value:_react.PropTypes.string,defaultValue:_react.PropTypes.string,style:_reactNative.View.propTypes.style,inputStyle:_reactNative.Text.propTypes.style,labelStyle:_reactNative.Text.propTypes.style,easing:_react.PropTypes.func,animationDuration:_react.PropTypes.number,onBlur:_react.PropTypes.func,onFocus:_react.PropTypes.func,onChange:_react.PropTypes.func};exports.default=BaseInput;
-}, 464, null, "react-native-textinput-effects/lib/BaseInput.js");
-__d(/* react-native-textinput-effects/lib/Hoshi.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var PADDING=16;var
-
-Hoshi=function(_BaseInput){babelHelpers.inherits(Hoshi,_BaseInput);function Hoshi(){babelHelpers.classCallCheck(this,Hoshi);return babelHelpers.possibleConstructorReturn(this,(Hoshi.__proto__||Object.getPrototypeOf(Hoshi)).apply(this,arguments));}babelHelpers.createClass(Hoshi,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-
-
-this.props,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,maskColor=_props.maskColor,borderColor=_props.borderColor,inputHeight=_props.height;var _state=
-
-
-
-
-this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
-
-return(
-_react2.default.createElement(_reactNative.View,{
-style:[styles.container,containerStyle,{
-height:inputHeight+PADDING,
-width:width}],
-
-onLayout:this._onLayout},
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle,{
-width:width,
-height:inputHeight}],
-
-value:value,
-onBlur:this._onBlur,
-onChange:this._onChange,
-onFocus:this._onFocus,
-underlineColorAndroid:'transparent'})),
-
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this._focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:[styles.labelContainer,{
-opacity:focusedAnim.interpolate({
-inputRange:[0,0.5,1],
-outputRange:[1,0,1]}),
-
-top:focusedAnim.interpolate({
-inputRange:[0,0.5,0.51,1],
-outputRange:[24,24,0,0]}),
-
-left:focusedAnim.interpolate({
-inputRange:[0,0.5,0.51,1],
-outputRange:[PADDING,2*PADDING,0,PADDING]})}]},
-
-
-_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
-label))),
-
-
-
-_react2.default.createElement(_reactNative.View,{style:[styles.labelMask,{backgroundColor:maskColor}]}),
-_react2.default.createElement(_reactNative.Animated.View,{
-style:[styles.border,{
-width:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[0,width]}),
-
-backgroundColor:borderColor}]})));
-
-
-
-
-}}]);return Hoshi;}(_BaseInput3.default);Hoshi.propTypes={borderColor:_react.PropTypes.string,maskColor:_react.PropTypes.string,height:_react.PropTypes.number};Hoshi.defaultProps={borderColor:'red',height:48};exports.default=Hoshi;
-
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-borderBottomWidth:2,
-borderBottomColor:'#b9c1ca'},
-
-labelContainer:{
-position:'absolute'},
-
-label:{
-fontSize:16,
-color:'#6a7989'},
-
-textInput:{
-position:'absolute',
-bottom:2,
-left:PADDING,
-padding:0,
-color:'#6a7989',
-fontSize:18,
-fontWeight:'bold'},
-
-labelMask:{
-height:24,
-width:PADDING},
-
-border:{
-position:'absolute',
-bottom:0,
-left:0,
-right:0,
-height:3}});
-}, 465, null, "react-native-textinput-effects/lib/Hoshi.js");
-__d(/* react-native-textinput-effects/lib/Jiro.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var PADDING=16;var
-
-Jiro=function(_BaseInput){babelHelpers.inherits(Jiro,_BaseInput);
-
-
-
-
-
-
-
-
-
-
-
-function Jiro(props,context){babelHelpers.classCallCheck(this,Jiro);var _this=babelHelpers.possibleConstructorReturn(this,(Jiro.__proto__||Object.getPrototypeOf(Jiro)).call(this,
-props,context));
-
-var animationValue=props.value?1:0;
-_this.state={
-value:props.value,
-borderPositionAnim:new _reactNative.Animated.Value(animationValue),
-borderHeightAnim:new _reactNative.Animated.Value(animationValue),
-labelPositionAnim:new _reactNative.Animated.Value(animationValue)};return _this;
-
-}babelHelpers.createClass(Jiro,[{key:'_toggle',value:function _toggle(
-
-isActive){
-var animationValue=isActive?1:0;
-var borderPositionAnimation=_reactNative.Animated.timing(this.state.borderPositionAnim,{
-toValue:animationValue,
-eaasing:_reactNative.Easing.bezier(0.2,1,0.3,1),
-duration:200});
-
-var borderHeightAnimation=_reactNative.Animated.timing(this.state.borderHeightAnim,{
-toValue:animationValue,
-eaasing:_reactNative.Easing.ease,
-duration:200});
-
-var labelPositionAnimation=_reactNative.Animated.timing(this.state.labelPositionAnim,{
-toValue:animationValue,
-eaasing:_reactNative.Easing.ease,
-duration:200});
-
-
-if(isActive){
-_reactNative.Animated.sequence([
-borderPositionAnimation,
-_reactNative.Animated.parallel([labelPositionAnimation,borderHeightAnimation])]).
-start();
-}else{
-_reactNative.Animated.sequence([
-borderHeightAnimation,
-_reactNative.Animated.parallel([borderPositionAnimation,labelPositionAnimation])]).
-start();
-}
-}},{key:'render',value:function render()
-
-{var _props=
-
-
-
-
-
-
-
-this.props,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,borderColor=_props.borderColor,inputHeight=_props.height;var _state=
-
-
-
-
-
-
-this.state,width=_state.width,borderPositionAnim=_state.borderPositionAnim,borderHeightAnim=_state.borderHeightAnim,labelPositionAnim=_state.labelPositionAnim,value=_state.value;
-var totalHeight=inputHeight+2*PADDING;
-
-return(
-_react2.default.createElement(_reactNative.View,{
-style:[containerStyle,{
-height:totalHeight}],
-
-onLayout:this._onLayout},
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:[styles.border,{
-height:borderHeightAnim.interpolate({
-inputRange:[0,1],
-outputRange:[3,inputHeight]}),
-
-top:borderPositionAnim.interpolate({
-inputRange:[0,1],
-outputRange:[totalHeight-3,2*PADDING]}),
-
-backgroundColor:borderColor}]}),
-
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle,{
-width:width,
-height:inputHeight}],
-
-value:value,
-onBlur:this._onBlur,
-onChange:this._onChange,
-onFocus:this._onFocus,
-underlineColorAndroid:'transparent'})),
-
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:[styles.labelContainer,{
-bottom:labelPositionAnim.interpolate({
-inputRange:[0,1],
-outputRange:[PADDING/2,inputHeight+PADDING/4]})}]},
-
-
-_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
-label)))));
-
-
-
-
-
-}}]);return Jiro;}(_BaseInput3.default);Jiro.propTypes={borderColor:_react.PropTypes.string,height:_react.PropTypes.number};Jiro.defaultProps={borderColor:'red',height:48};exports.default=Jiro;
-
-
-var styles=_reactNative.StyleSheet.create({
-labelContainer:{
-position:'absolute',
-left:PADDING,
-backgroundColor:'transparent'},
-
-label:{
-fontFamily:'Arial',
-fontSize:13,
-fontWeight:'bold',
-color:'#6a7989'},
-
-textInput:{
-position:'absolute',
-bottom:0,
-padding:0,
-left:PADDING,
-color:'black',
-fontSize:18,
-fontWeight:'bold'},
-
-border:{
-position:'absolute',
-bottom:0,
-left:0,
-right:0}});
-}, 466, null, "react-native-textinput-effects/lib/Jiro.js");
-__d(/* react-native-textinput-effects/lib/Isao.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var LABEL_HEIGHT=24;
-var PADDING=16;var
-
-Isao=function(_BaseInput){babelHelpers.inherits(Isao,_BaseInput);function Isao(){babelHelpers.classCallCheck(this,Isao);return babelHelpers.possibleConstructorReturn(this,(Isao.__proto__||Object.getPrototypeOf(Isao)).apply(this,arguments));}babelHelpers.createClass(Isao,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-
-
-this.props,label=_props.label,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,activeColor=_props.activeColor,passiveColor=_props.passiveColor;var _state=
-
-
-
-
-this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
-
-return(
-_react2.default.createElement(_reactNative.View,{
-style:[containerStyle,{
-height:inputHeight+LABEL_HEIGHT}],
-
-onLayout:this._onLayout},
-
-_react2.default.createElement(_reactNative.View,{style:[styles.inputContainer,{
-height:inputHeight,
-borderBottomColor:passiveColor}]},
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle,{
-width:width,
-height:inputHeight}],
-
-value:value,
-onBlur:this._onBlur,
-onChange:this._onChange,
-onFocus:this._onFocus,
-underlineColorAndroid:'transparent'}))),
-
-
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.View,{style:{
-height:LABEL_HEIGHT,
-width:width}},
-
-
-_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,labelStyle,{
-width:width,
-opacity:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[1,0]}),
-
-bottom:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[0,LABEL_HEIGHT]}),
-
-color:passiveColor}]},
-
-label),
-
-
-_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,labelStyle,{
-opacity:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[0,1]}),
-
-bottom:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[LABEL_HEIGHT*-1,0]}),
-
-color:activeColor}]},
-
-label))),
-
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:[styles.border,{
-height:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[0,8]}),
-
-width:width,
-backgroundColor:activeColor}]})));
-
-
-
-
-}}]);return Isao;}(_BaseInput3.default);Isao.propTypes={passiveColor:_react.PropTypes.string,activeColor:_react.PropTypes.string,height:_react.PropTypes.number};Isao.defaultProps={activeColor:'red',passiveColor:'white',height:48,easing:_reactNative.Easing.bezier(0.2,1,0.3,1)};exports.default=Isao;
-
-
-var styles=_reactNative.StyleSheet.create({
-inputContainer:{
-borderBottomWidth:2},
-
-labelContainer:{
-paddingLeft:PADDING,
-height:LABEL_HEIGHT},
-
-label:{
-position:'absolute',
-height:LABEL_HEIGHT,
-left:PADDING,
-paddingTop:4,
-backgroundColor:'transparent',
-fontFamily:'Arial',
-fontSize:14,
-fontWeight:'bold'},
-
-textInput:{
-paddingHorizontal:PADDING,
-color:'#afb3b8',
-fontSize:18,
-fontWeight:'bold',
-padding:0},
-
-border:{
-position:'absolute',
-bottom:LABEL_HEIGHT,
-left:0,
-right:0}});
-}, 467, null, "react-native-textinput-effects/lib/Isao.js");
-__d(/* react-native-textinput-effects/lib/Madoka.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var LABEL_HEIGHT=24;
-var PADDING=16;var
-
-Madoka=function(_BaseInput){babelHelpers.inherits(Madoka,_BaseInput);function Madoka(){babelHelpers.classCallCheck(this,Madoka);return babelHelpers.possibleConstructorReturn(this,(Madoka.__proto__||Object.getPrototypeOf(Madoka)).apply(this,arguments));}babelHelpers.createClass(Madoka,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-
-this.props,label=_props.label,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,borderColor=_props.borderColor;var _state=
-
-
-
-
-this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
-
-return(
-_react2.default.createElement(_reactNative.View,{
-style:[containerStyle,{height:inputHeight+LABEL_HEIGHT+8}],
-onLayout:this._onLayout},
-
-_react2.default.createElement(_reactNative.View,{style:[styles.inputContainer,{borderBottomColor:borderColor}]},
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle,{
-width:width,
-height:inputHeight}],
-
-value:value,
-onBlur:this._onBlur,
-onChange:this._onChange,
-onFocus:this._onFocus,
-underlineColorAndroid:'transparent'})),
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:{
-position:'absolute',
-right:0,
-bottom:0,
-width:2,
-height:focusedAnim.interpolate({
-inputRange:[0,0.2,1],
-outputRange:[0,inputHeight,inputHeight]}),
-
-backgroundColor:borderColor}}),
-
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:{
-position:'absolute',
-right:0,
-top:0,
-height:2,
-width:focusedAnim.interpolate({
-inputRange:[0,0.2,0.8,1],
-outputRange:[0,0,width,width]}),
-
-backgroundColor:borderColor}}),
-
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:{
-position:'absolute',
-left:0,
-top:0,
-width:2,
-height:focusedAnim.interpolate({
-inputRange:[0,0.8,1],
-outputRange:[0,0,inputHeight]}),
-
-backgroundColor:borderColor}})),
-
-
-
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:[styles.labelContainer,{
-width:width,
-height:LABEL_HEIGHT,
-bottom:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[LABEL_HEIGHT+PADDING,0]})}]},
-
-
-_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,labelStyle,{
-fontSize:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[18,14]})}]},
-
-
-label)))));
-
-
-
-
-
-}}]);return Madoka;}(_BaseInput3.default);Madoka.propTypes={borderColor:_react.PropTypes.string,height:_react.PropTypes.number};Madoka.defaultProps={borderColor:'#7A7593',animationDuration:250,height:48};exports.default=Madoka;
-
-
-var styles=_reactNative.StyleSheet.create({
-inputContainer:{
-borderBottomWidth:2},
-
-labelContainer:{
-position:'absolute',
-left:PADDING},
-
-label:{
-backgroundColor:'transparent',
-fontFamily:'Arial',
-fontWeight:'bold',
-color:'#6a7989'},
-
-textInput:{
-paddingHorizontal:PADDING,
-paddingVertical:0,
-color:'black',
-fontSize:18,
-fontWeight:'bold'}});
-}, 468, null, "react-native-textinput-effects/lib/Madoka.js");
-__d(/* react-native-textinput-effects/lib/Akira.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var LABEL_HEIGHT=24;
-var PADDING=16;var
-
-Akira=function(_BaseInput){babelHelpers.inherits(Akira,_BaseInput);function Akira(){babelHelpers.classCallCheck(this,Akira);return babelHelpers.possibleConstructorReturn(this,(Akira.__proto__||Object.getPrototypeOf(Akira)).apply(this,arguments));}babelHelpers.createClass(Akira,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-
-this.props,label=_props.label,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,borderColor=_props.borderColor;var _state=
-
-
-
-
-this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
-
-return(
-_react2.default.createElement(_reactNative.View,{style:containerStyle,onLayout:this._onLayout},
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:{
-width:width,
-height:LABEL_HEIGHT,
-transform:[{
-translateY:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[LABEL_HEIGHT+PADDING,0]})}]}},
-
-
-
-_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
-label))),
-
-
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle,{
-width:width,
-height:inputHeight}],
-
-value:value,
-onBlur:this._onBlur,
-onChange:this._onChange,
-onFocus:this._onFocus,
-underlineColorAndroid:'transparent'})),
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:{
-position:'absolute',
-left:0,
-bottom:0,
-height:inputHeight,
-width:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[6,1]}),
-
-backgroundColor:borderColor}}),
-
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:{
-position:'absolute',
-top:LABEL_HEIGHT,
-width:width,
-height:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[6,1]}),
-
-backgroundColor:borderColor}}),
-
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:{
-position:'absolute',
-right:0,
-bottom:0,
-height:inputHeight,
-width:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[6,1]}),
-
-backgroundColor:borderColor}}),
-
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:{
-position:'absolute',
-bottom:0,
-height:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[6,1]}),
-
-width:width,
-backgroundColor:borderColor}})));
-
-
-
-
-}}]);return Akira;}(_BaseInput3.default);Akira.propTypes={borderColor:_react.PropTypes.string,height:_react.PropTypes.number};Akira.defaultProps={borderColor:'#7A7593',height:48,animationDuration:200};exports.default=Akira;
-
-
-var styles=_reactNative.StyleSheet.create({
-label:{
-backgroundColor:'transparent',
-fontFamily:'Arial',
-fontSize:14,
-fontWeight:'bold',
-color:'#cc6055',
-textAlign:'center'},
-
-textInput:{
-paddingHorizontal:PADDING,
-padding:0,
-color:'black',
-fontSize:18,
-textAlign:'center'}});
-}, 469, null, "react-native-textinput-effects/lib/Akira.js");
-__d(/* react-native-textinput-effects/lib/Hideo.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);var
-
-Hideo=function(_BaseInput){babelHelpers.inherits(Hideo,_BaseInput);function Hideo(){babelHelpers.classCallCheck(this,Hideo);return babelHelpers.possibleConstructorReturn(this,(Hideo.__proto__||Object.getPrototypeOf(Hideo)).apply(this,arguments));}babelHelpers.createClass(Hideo,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-
-
-this.props,iconClass=_props.iconClass,iconColor=_props.iconColor,iconName=_props.iconName,iconBackgroundColor=_props.iconBackgroundColor,containerStyle=_props.style,inputStyle=_props.inputStyle,inputHeight=_props.height;var _state=
-
-
-
-this.state,focusedAnim=_state.focusedAnim,value=_state.value;
-var AnimatedIcon=_reactNative.Animated.createAnimatedComponent(iconClass);
-
-return(
-_react2.default.createElement(_reactNative.View,{style:[styles.container,containerStyle],onLayout:this._onLayout},
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:{
-backgroundColor:iconBackgroundColor,
-justifyContent:'center',
-alignItems:'center',
-height:inputHeight,
-width:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[60,40]})}},
-
-
-_react2.default.createElement(AnimatedIcon,{
-name:iconName,
-color:iconColor,
-style:{
-fontSize:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[25,15]})}}))),
-
-
-
-
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle],
-value:value,
-onBlur:this._onBlur,
-onChange:this._onChange,
-onFocus:this._onFocus,
-underlineColorAndroid:'transparent'}))));
-
-
-
-}}]);return Hideo;}(_BaseInput3.default);Hideo.propTypes={iconBackgroundColor:_react.PropTypes.string,iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string.isRequired,iconColor:_react.PropTypes.string};Hideo.defaultProps={iconColor:'white',iconBackgroundColor:'#899dda',height:48,animationDuration:200};exports.default=Hideo;
-
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-flex:1,
-flexDirection:'row'},
-
-textInput:{
-flex:1,
-paddingHorizontal:16,
-paddingVertical:0,
-color:'black',
-backgroundColor:'white',
-fontSize:18}});
-}, 470, null, "react-native-textinput-effects/lib/Hideo.js");
-__d(/* react-native-textinput-effects/lib/Kohana.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var PADDING=16;var
-
-Kohana=function(_BaseInput){babelHelpers.inherits(Kohana,_BaseInput);function Kohana(){babelHelpers.classCallCheck(this,Kohana);return babelHelpers.possibleConstructorReturn(this,(Kohana.__proto__||Object.getPrototypeOf(Kohana)).apply(this,arguments));}babelHelpers.createClass(Kohana,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-
-
-this.props,Icon=_props.iconClass,iconColor=_props.iconColor,iconName=_props.iconName,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle;var _state=
-this.state,focusedAnim=_state.focusedAnim,value=_state.value;
-
-return(
-_react2.default.createElement(_reactNative.View,{style:[styles.container,containerStyle],onLayout:this._onLayout},
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:{
-justifyContent:'center',
-padding:PADDING,
-marginLeft:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[-40,0]})}},
-
-
-_react2.default.createElement(Icon,{
-name:iconName,
-color:iconColor,
-size:25}))),
-
-
-
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:{
-position:'absolute',
-top:PADDING,
-left:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[PADDING,80]}),
-
-opacity:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[1,0]})}},
-
-
-_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
-label))),
-
-
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle],
-value:value,
-onBlur:this._onBlur,
-onFocus:this._onFocus,
-onChange:this._onChange,
-underlineColorAndroid:'transparent'}))));
-
-
-
-}}]);return Kohana;}(_BaseInput3.default);Kohana.propTypes={iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string.isRequired,iconColor:_react.PropTypes.string};Kohana.defaultProps={easing:_reactNative.Easing.bezier(0.2,1,0.3,1)};exports.default=Kohana;
-
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-flex:1,
-flexDirection:'row',
-backgroundColor:'white',
-overflow:'hidden'},
-
-label:{
-fontSize:18,
-fontFamily:'Arial',
-fontWeight:'bold',
-color:'#D2D2D2'},
-
-textInput:{
-flex:1,
-paddingHorizontal:PADDING,
-paddingVertical:0,
-color:'black',
-fontSize:18}});
-}, 471, null, "react-native-textinput-effects/lib/Kohana.js");
-__d(/* react-native-textinput-effects/lib/Makiko.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var ICON_WIDTH=60;
-var ICON_SIZE=30;
-var PADDING=16;var
-
-Makiko=function(_BaseInput){babelHelpers.inherits(Makiko,_BaseInput);function Makiko(){babelHelpers.classCallCheck(this,Makiko);return babelHelpers.possibleConstructorReturn(this,(Makiko.__proto__||Object.getPrototypeOf(Makiko)).apply(this,arguments));}babelHelpers.createClass(Makiko,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-
-
-
-this.props,iconClass=_props.iconClass,iconColor=_props.iconColor,iconName=_props.iconName,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,label=_props.label,labelStyle=_props.labelStyle;var _state=
-
-
-
-
-this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
-var AnimatedIcon=_reactNative.Animated.createAnimatedComponent(iconClass);
-
-return(
-_react2.default.createElement(_reactNative.View,{style:[styles.container,containerStyle],onLayout:this._onLayout},
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.View,{style:{
-position:'absolute',
-height:inputHeight,
-width:width}},
-
-_react2.default.createElement(AnimatedIcon,{
-name:iconName,
-color:iconColor,
-style:{
-position:'absolute',
-backgroundColor:'transparent',
-top:focusedAnim.interpolate({
-inputRange:[0,0.2,1],
-outputRange:[8,ICON_SIZE*-1,ICON_SIZE*-1]}),
-
-left:focusedAnim.interpolate({
-inputRange:[0,0.2,1],
-outputRange:[PADDING,-22,-22]}),
-
-height:focusedAnim.interpolate({
-inputRange:[0,0.2,1],
-outputRange:[ICON_SIZE,inputHeight*2,inputHeight*2]}),
-
-fontSize:focusedAnim.interpolate({
-inputRange:[0,0.2,1],
-outputRange:[ICON_SIZE,ICON_SIZE*4,ICON_SIZE*4]})}}),
-
-
-
-_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle,{color:iconColor}]},
-label))),
-
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:{
-position:'absolute',
-backgroundColor:'white',
-left:ICON_WIDTH,
-height:inputHeight,
-width:focusedAnim.interpolate({
-inputRange:[0,0.2,1],
-outputRange:[0,0,width]})}}),
-
-
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle,{
-width:width,
-height:inputHeight}],
-
-value:value,
-onBlur:this._onBlur,
-onChange:this._onChange,
-onFocus:this._onFocus,
-underlineColorAndroid:'transparent'}))));
-
-
-
-}}]);return Makiko;}(_BaseInput3.default);Makiko.propTypes={iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string.isRequired,iconColor:_react.PropTypes.string};Makiko.defaultProps={iconColor:'white',height:48,easing:_reactNative.Easing.bezier(0.7,0,0.3,1),animationDuration:300};exports.default=Makiko;
-
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-backgroundColor:'#CBCBCB',
-overflow:'hidden'},
-
-label:{
-position:'absolute',
-top:PADDING,
-left:ICON_WIDTH,
-fontSize:16,
-fontFamily:'Arial',
-fontWeight:'bold',
-color:'white',
-backgroundColor:'transparent'},
-
-textInput:{
-paddingHorizontal:PADDING,
-paddingVertical:0,
-color:'black',
-fontSize:18}});
-}, 472, null, "react-native-textinput-effects/lib/Makiko.js");
-__d(/* react-native-textinput-effects/lib/Sae.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var LABEL_HEIGHT=24;
-var PADDING=16;var
-
-Sae=function(_BaseInput){babelHelpers.inherits(Sae,_BaseInput);function Sae(){babelHelpers.classCallCheck(this,Sae);return babelHelpers.possibleConstructorReturn(this,(Sae.__proto__||Object.getPrototypeOf(Sae)).apply(this,arguments));}babelHelpers.createClass(Sae,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-
-
-
-this.props,iconClass=_props.iconClass,iconColor=_props.iconColor,iconName=_props.iconName,label=_props.label,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle;var _state=
-
-
-
-
-this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
-var AnimatedIcon=_reactNative.Animated.createAnimatedComponent(iconClass);
-
-return(
-_react2.default.createElement(_reactNative.View,{
-style:[styles.container,containerStyle,{
-height:inputHeight+PADDING}],
-
-onLayout:this._onLayout},
-
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:{
-position:'absolute',
-bottom:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[0,LABEL_HEIGHT+PADDING]})}},
-
-
-_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,labelStyle,{
-fontSize:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[18,12]})}]},
-
-
-label))),
-
-
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,inputStyle,{
-width:width,
-height:inputHeight}],
-
-value:value,
-onBlur:this._onBlur,
-onChange:this._onChange,
-onFocus:this._onFocus,
-underlineColorAndroid:'transparent'})),
-
-_react2.default.createElement(AnimatedIcon,{
-name:iconName,
-color:iconColor,
-style:{
-position:'absolute',
-bottom:0,
-right:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[0,width+PADDING]}),
-
-transform:[{
-rotate:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:['0deg','-90deg']})}],
-
-
-fontSize:20,
-backgroundColor:'transparent'}}),
-
-
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:{
-position:'absolute',
-bottom:0,
-right:0,
-height:2,
-width:focusedAnim.interpolate({
-inputRange:[0,1],
-outputRange:[0,width]}),
-
-backgroundColor:iconColor}})));
-
-
-
-
-}}]);return Sae;}(_BaseInput3.default);Sae.propTypes={height:_react.PropTypes.number,iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string,iconColor:_react.PropTypes.string};Sae.defaultProps={iconColor:'white',height:48,animationDuration:300,iconName:'pencil'};exports.default=Sae;
-
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-overflow:'hidden'},
-
-label:{
-backgroundColor:'transparent',
-fontFamily:'Arial',
-fontWeight:'bold',
-color:'#7771ab'},
-
-textInput:{
-position:'absolute',
-bottom:0,
-left:0,
-paddingTop:PADDING/2,
-paddingLeft:0,
-color:'white',
-fontSize:18}});
-}, 473, null, "react-native-textinput-effects/lib/Sae.js");
-__d(/* react-native-textinput-effects/lib/Fumi.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
-
-var PADDING=16;
-var ICON_WIDTH=40;var
-
-Fumi=function(_BaseInput){babelHelpers.inherits(Fumi,_BaseInput);function Fumi(){babelHelpers.classCallCheck(this,Fumi);return babelHelpers.possibleConstructorReturn(this,(Fumi.__proto__||Object.getPrototypeOf(Fumi)).apply(this,arguments));}babelHelpers.createClass(Fumi,[{key:'render',value:function render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{var _props=
-
-
-
-
-
-
-
-
-
-
-this.props,iconClass=_props.iconClass,iconColor=_props.iconColor,passiveIconColor=_props.passiveIconColor,iconName=_props.iconName,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,inputHeight=_props.height,labelStyle=_props.labelStyle;var _state=
-this.state,focusedAnim=_state.focusedAnim,value=_state.value;
-var AnimatedIcon=_reactNative.Animated.createAnimatedComponent(iconClass);
-var ANIM_PATH=PADDING+inputHeight;
-var NEGATIVE_ANIM_PATH=ANIM_PATH*-1;
-
-return(
-_react2.default.createElement(_reactNative.View,{style:[styles.container,containerStyle],onLayout:this._onLayout},
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(AnimatedIcon,{
-name:iconName,
-color:iconColor,
-size:20,
-style:{
-position:'absolute',
-left:PADDING,
-bottom:focusedAnim.interpolate({
-inputRange:[0,0.5,0.51,0.7,1],
-outputRange:[24,ANIM_PATH,NEGATIVE_ANIM_PATH,NEGATIVE_ANIM_PATH,24]}),
-
-color:focusedAnim.interpolate({
-inputRange:[0,0.5,1],
-outputRange:[passiveIconColor,iconColor,iconColor]})}})),
-
-
-
-
-_react2.default.createElement(_reactNative.View,{
-style:[styles.separator,{
-height:inputHeight,
-left:ICON_WIDTH+8}]}),
-
-
-_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
-_react2.default.createElement(_reactNative.Animated.View,{style:{
-position:'absolute',
-left:ICON_WIDTH+PADDING,
-height:inputHeight,
-top:focusedAnim.interpolate({
-inputRange:[0,0.5,0.51,0.7,1],
-outputRange:[24,ANIM_PATH,NEGATIVE_ANIM_PATH,NEGATIVE_ANIM_PATH,PADDING/2]})}},
-
-
-_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,{
-fontSize:focusedAnim.interpolate({
-inputRange:[0,0.7,0.71,1],
-outputRange:[16,16,12,12]}),
-
-color:focusedAnim.interpolate({
-inputRange:[0,0.7],
-outputRange:['#696969','#a3a3a3']})},
-
-labelStyle]},
-label))),
-
-
-
-_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
-ref:'input'},
-this.props,{
-style:[styles.textInput,{
-marginLeft:ICON_WIDTH+PADDING,
-color:iconColor},
-inputStyle],
-value:value,
-onBlur:this._onBlur,
-onFocus:this._onFocus,
-onChange:this._onChange,
-underlineColorAndroid:'transparent'}))));
-
-
-
-}}]);return Fumi;}(_BaseInput3.default);Fumi.propTypes={iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string.isRequired,iconColor:_react.PropTypes.string,passiveIconColor:_react.PropTypes.string,height:_react.PropTypes.number};Fumi.defaultProps={height:48,iconColor:'#00aeef',passiveIconColor:'#a3a3a3',animationDuration:300};exports.default=Fumi;
-
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-overflow:'hidden',
-paddingTop:16,
-backgroundColor:'white'},
-
-label:{
-fontSize:18,
-fontFamily:'Arial',
-fontWeight:'bold'},
-
-textInput:{
-flex:1,
-color:'black',
-fontSize:18,
-padding:7,
-paddingLeft:0},
-
-separator:{
-position:'absolute',
-width:1,
-backgroundColor:'#f0f0f0',
-marginTop:-8}});
-}, 474, null, "react-native-textinput-effects/lib/Fumi.js");
-__d(/* GurulaCoffee/app/QuietHours.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-var _reactNativeDatepicker=require(476 /* react-native-datepicker */);var _reactNativeDatepicker2=babelHelpers.interopRequireDefault(_reactNativeDatepicker);var
-
-
-QuietHours=function(_Component){babelHelpers.inherits(QuietHours,_Component);
-
-function QuietHours(props){babelHelpers.classCallCheck(this,QuietHours);var _this=babelHelpers.possibleConstructorReturn(this,(QuietHours.__proto__||Object.getPrototypeOf(QuietHours)).call(this,
-props));
-_this.setTime=_this.setTime.bind(_this);
-
-_this.state={
-start:null,
-end:null};return _this;
-
-}babelHelpers.createClass(QuietHours,[{key:'componentWillMount',value:function componentWillMount()
-
-{var _this2=this;
-_reactNative.AsyncStorage.multiGet(["start","end"]).then(function(values){
-var start=values[0][1];
-var end=values[1][1];
-
-_this2.setState({
-start:start,
-end:end});
-
-});
-}},{key:'setTime',value:function setTime(
-
-time,type){
-this.setState(babelHelpers.defineProperty({},
-type,time));
-
-_reactNative.AsyncStorage.setItem(type,time);
-}},{key:'render',value:function render()
-
-{var _this3=this;
-return(
-_react2.default.createElement(_reactNative.View,{style:styles.container},
-_react2.default.createElement(_reactNative.Text,{style:styles.header},'Select your quiet hours'),
-_react2.default.createElement(_reactNative.Text,{style:styles.text},'You won\'t be notified of coffee during this time',"\n"),
-_react2.default.createElement(_reactNative.View,{style:styles.timepickers},
-_react2.default.createElement(_reactNativeDatepicker2.default,{
-style:{width:200},
-date:this.state.start,
-mode:'time',
-format:'HH:mm',
-placeholder:'Select start time',
-confirmBtnText:'Confirm',
-cancelBtnText:'Cancel',
-minuteInterval:10,
-onDateChange:function onDateChange(time){_this3.setTime(time,"start");}}),
-
-_react2.default.createElement(_reactNative.Text,null,"\n"),
-_react2.default.createElement(_reactNativeDatepicker2.default,{
-style:{width:200},
-date:this.state.end,
-mode:'time',
-format:'HH:mm',
-placeholder:'Select end time',
-confirmBtnText:'Confirm',
-cancelBtnText:'Cancel',
-minuteInterval:10,
-onDateChange:function onDateChange(time){_this3.setTime(time,"end");}}))));
-
-
-
-
-}}]);return QuietHours;}(_react.Component);exports.default=QuietHours;
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-flex:1,
-alignItems:'center',
-justifyContent:'flex-start',
-paddingTop:70,
-backgroundColor:'#F5FCFF'},
-
-header:{
-fontSize:40,
-textAlign:'center',
-fontWeight:'bold'},
-
-text:{
-fontSize:16,
-textAlign:'center',
-paddingTop:20},
-
-timepickers:{
-alignItems:'flex-end',
-paddingTop:50}});
-}, 475, null, "GurulaCoffee/app/QuietHours.js");
-__d(/* react-native-datepicker/index.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
-var _reactNative=require(42 /* react-native */);
-
-
-
-
-
-
-
-
-
-
-
-var _style=require(477 /* ./style */);var _style2=babelHelpers.interopRequireDefault(_style);
-var _moment=require(478 /* moment */);var _moment2=babelHelpers.interopRequireDefault(_moment);
-
-var FORMATS={
-'date':'YYYY-MM-DD',
-'datetime':'YYYY-MM-DD HH:mm',
-'time':'HH:mm'};var
-
-
-DatePicker=function(_Component){babelHelpers.inherits(DatePicker,_Component);
-function DatePicker(props){babelHelpers.classCallCheck(this,DatePicker);var _this=babelHelpers.possibleConstructorReturn(this,(DatePicker.__proto__||Object.getPrototypeOf(DatePicker)).call(this,
-props));
-
-_this.state={
-date:_this.getDate(),
-modalVisible:false,
-animatedHeight:new _reactNative.Animated.Value(0)};
-
-
-_this.datePicked=_this.datePicked.bind(_this);
-_this.onPressDate=_this.onPressDate.bind(_this);
-_this.onPressCancel=_this.onPressCancel.bind(_this);
-_this.onPressConfirm=_this.onPressConfirm.bind(_this);
-_this.onDatePicked=_this.onDatePicked.bind(_this);
-_this.onTimePicked=_this.onTimePicked.bind(_this);
-_this.onDatetimePicked=_this.onDatetimePicked.bind(_this);
-_this.onDatetimeTimePicked=_this.onDatetimeTimePicked.bind(_this);
-_this.setModalVisible=_this.setModalVisible.bind(_this);return _this;
-}babelHelpers.createClass(DatePicker,[{key:'componentWillMount',value:function componentWillMount()
-
-{
-
-console.ignoredYellowBox=[
-'Warning: Failed propType'];
-
-
-}},{key:'setModalVisible',value:function setModalVisible(
-
-visible){var _props=
-this.props,height=_props.height,duration=_props.duration;
-
-this.setState({modalVisible:visible});
-
-
-if(visible){
-_reactNative.Animated.timing(
-this.state.animatedHeight,
-{
-toValue:height,
-duration:duration}).
-
-start();
-}else{
-this.setState({
-animatedHeight:new _reactNative.Animated.Value(0)});
-
-}
-}},{key:'onStartShouldSetResponder',value:function onStartShouldSetResponder(
-
-e){
-return true;
-}},{key:'onMoveShouldSetResponder',value:function onMoveShouldSetResponder(
-
-e){
-return true;
-}},{key:'onPressCancel',value:function onPressCancel()
-
-{
-this.setModalVisible(false);
-}},{key:'onPressConfirm',value:function onPressConfirm()
-
-{
-this.datePicked();
-this.setModalVisible(false);
-}},{key:'getDate',value:function getDate()
-
-{var date=arguments.length>0&&arguments[0]!==undefined?arguments[0]:this.props.date;var _props2=
-this.props,mode=_props2.mode,minDate=_props2.minDate,maxDate=_props2.maxDate,_props2$format=_props2.format,format=_props2$format===undefined?FORMATS[mode]:_props2$format;
-
-
-if(!date){
-var now=new Date();
-if(minDate){
-var _minDate=this.getDate(minDate);
-
-if(now<_minDate){
-return _minDate;
-}
-}
-
-if(maxDate){
-var _maxDate=this.getDate(maxDate);
-
-if(now>_maxDate){
-return _maxDate;
-}
-}
-
-return now;
-}
-
-if(date instanceof Date){
-return date;
-}
-
-return(0,_moment2.default)(date,format).toDate();
-}},{key:'getDateStr',value:function getDateStr()
-
-{var date=arguments.length>0&&arguments[0]!==undefined?arguments[0]:this.props.date;var _props3=
-this.props,mode=_props3.mode,_props3$format=_props3.format,format=_props3$format===undefined?FORMATS[mode]:_props3$format;
-
-if(date instanceof Date){
-return(0,_moment2.default)(date).format(format);
-}else{
-return(0,_moment2.default)(this.getDate(date)).format(format);
-}
-}},{key:'datePicked',value:function datePicked()
-
-{
-if(typeof this.props.onDateChange==='function'){
-this.props.onDateChange(this.getDateStr(this.state.date),this.state.date);
-}
-}},{key:'getTitleElement',value:function getTitleElement()
-
-{var _props4=
-this.props,date=_props4.date,placeholder=_props4.placeholder,customStyles=_props4.customStyles;
-
-if(!date&&placeholder){
-return _react2.default.createElement(_reactNative.Text,{style:[_style2.default.placeholderText,customStyles.placeholderText]},placeholder);
-}
-return _react2.default.createElement(_reactNative.Text,{style:[_style2.default.dateText,customStyles.dateText]},this.getDateStr());
-}},{key:'onDatePicked',value:function onDatePicked(_ref)
-
-{var action=_ref.action,year=_ref.year,month=_ref.month,day=_ref.day;
-if(action!==_reactNative.DatePickerAndroid.dismissedAction){
-this.setState({
-date:new Date(year,month,day)});
-
-this.datePicked();
-}
-}},{key:'onTimePicked',value:function onTimePicked(_ref2)
-
-{var action=_ref2.action,hour=_ref2.hour,minute=_ref2.minute;
-if(action!==_reactNative.DatePickerAndroid.dismissedAction){
-this.setState({
-date:(0,_moment2.default)().hour(hour).minute(minute).toDate()});
-
-this.datePicked();
-}
-}},{key:'onDatetimePicked',value:function onDatetimePicked(_ref3)
-
-{var action=_ref3.action,year=_ref3.year,month=_ref3.month,day=_ref3.day;var _props5=
-this.props,mode=_props5.mode,_props5$format=_props5.format,format=_props5$format===undefined?FORMATS[mode]:_props5$format,_props5$is24Hour=_props5.is24Hour,is24Hour=_props5$is24Hour===undefined?!format.match(/h|a/):_props5$is24Hour;
-
-if(action!==_reactNative.DatePickerAndroid.dismissedAction){
-var timeMoment=(0,_moment2.default)(this.state.date);
-
-_reactNative.TimePickerAndroid.open({
-hour:timeMoment.hour(),
-minute:timeMoment.minutes(),
-is24Hour:is24Hour}).
-then(this.onDatetimeTimePicked.bind(this,year,month,day));
-}
-}},{key:'onDatetimeTimePicked',value:function onDatetimeTimePicked(
-
-year,month,day,_ref4){var action=_ref4.action,hour=_ref4.hour,minute=_ref4.minute;
-if(action!==_reactNative.DatePickerAndroid.dismissedAction){
-this.setState({
-date:new Date(year,month,day,hour,minute)});
-
-this.datePicked();
-}
-}},{key:'onPressDate',value:function onPressDate()
-
-{
-if(this.props.disabled){
-return true;
-}
-
-
-this.setState({
-date:this.getDate()});
-
-
-if(_reactNative.Platform.OS==='ios'){
-this.setModalVisible(true);
-}else{var _props6=
-
-this.props,mode=_props6.mode,_props6$format=_props6.format,format=_props6$format===undefined?FORMATS[mode]:_props6$format,minDate=_props6.minDate,maxDate=_props6.maxDate,_props6$is24Hour=_props6.is24Hour,is24Hour=_props6$is24Hour===undefined?!format.match(/h|a/):_props6$is24Hour;
-
-
-if(mode==='date'){
-_reactNative.DatePickerAndroid.open({
-date:this.state.date,
-minDate:minDate&&this.getDate(minDate),
-maxDate:maxDate&&this.getDate(maxDate)}).
-then(this.onDatePicked);
-}else if(mode==='time'){
-
-
-var timeMoment=(0,_moment2.default)(this.state.date);
-
-_reactNative.TimePickerAndroid.open({
-hour:timeMoment.hour(),
-minute:timeMoment.minutes(),
-is24Hour:is24Hour}).
-then(this.onTimePicked);
-}else if(mode==='datetime'){
-
-
-_reactNative.DatePickerAndroid.open({
-date:this.state.date,
-minDate:minDate&&this.getDate(minDate),
-maxDate:maxDate&&this.getDate(maxDate)}).
-then(this.onDatetimePicked);
-}
-}
-}},{key:'render',value:function render()
-
-{var _this2=this;var _props7=
-
-
-
-
-
-
-
-
-
-
-
-
-
-this.props,mode=_props7.mode,style=_props7.style,customStyles=_props7.customStyles,disabled=_props7.disabled,showIcon=_props7.showIcon,iconSource=_props7.iconSource,minDate=_props7.minDate,maxDate=_props7.maxDate,minuteInterval=_props7.minuteInterval,timeZoneOffsetInMinutes=_props7.timeZoneOffsetInMinutes,cancelBtnText=_props7.cancelBtnText,confirmBtnText=_props7.confirmBtnText;
-
-var dateInputStyle=[
-_style2.default.dateInput,customStyles.dateInput,
-disabled&&_style2.default.disabled,
-disabled&&customStyles.disabled];
-
-
-return(
-_react2.default.createElement(_reactNative.TouchableHighlight,{
-style:[_style2.default.dateTouch,style],
-underlayColor:'transparent',
-onPress:this.onPressDate},
-
-_react2.default.createElement(_reactNative.View,{style:[_style2.default.dateTouchBody,customStyles.dateTouchBody]},
-_react2.default.createElement(_reactNative.View,{style:dateInputStyle},
-this.getTitleElement()),
-
-showIcon&&_react2.default.createElement(_reactNative.Image,{
-style:[_style2.default.dateIcon,customStyles.dateIcon],
-source:iconSource}),
-
-_reactNative.Platform.OS==='ios'&&_react2.default.createElement(_reactNative.Modal,{
-transparent:true,
-visible:this.state.modalVisible,
-onRequestClose:function onRequestClose(){_this2.setModalVisible(false);}},
-
-_react2.default.createElement(_reactNative.View,{
-style:{flex:1}},
-
-_react2.default.createElement(_reactNative.TouchableHighlight,{
-style:_style2.default.datePickerMask,
-activeOpacity:1,
-underlayColor:'#00000077',
-onPress:this.onPressCancel},
-
-_react2.default.createElement(_reactNative.TouchableHighlight,{
-underlayColor:'#fff',
-style:{flex:1}},
-
-_react2.default.createElement(_reactNative.Animated.View,{
-style:[_style2.default.datePickerCon,{height:this.state.animatedHeight},customStyles.datePickerCon]},
-
-_react2.default.createElement(_reactNative.DatePickerIOS,{
-date:this.state.date,
-mode:mode,
-minimumDate:minDate&&this.getDate(minDate),
-maximumDate:maxDate&&this.getDate(maxDate),
-onDateChange:function onDateChange(date){return _this2.setState({date:date});},
-minuteInterval:minuteInterval,
-timeZoneOffsetInMinutes:timeZoneOffsetInMinutes,
-style:[_style2.default.datePicker,customStyles.datePicker]}),
-
-_react2.default.createElement(_reactNative.TouchableHighlight,{
-underlayColor:'transparent',
-onPress:this.onPressCancel,
-style:[_style2.default.btnText,_style2.default.btnCancel,customStyles.btnCancel]},
-
-_react2.default.createElement(_reactNative.Text,{
-style:[_style2.default.btnTextText,_style2.default.btnTextCancel,customStyles.btnTextCancel]},
-
-cancelBtnText)),
-
-
-_react2.default.createElement(_reactNative.TouchableHighlight,{
-underlayColor:'transparent',
-onPress:this.onPressConfirm,
-style:[_style2.default.btnText,_style2.default.btnConfirm,customStyles.btnConfirm]},
-
-_react2.default.createElement(_reactNative.Text,{style:[_style2.default.btnTextText,customStyles.btnTextConfirm]},confirmBtnText))))))))));
-
-
-
-
-
-
-
-
-
-}}]);return DatePicker;}(_react.Component);
-
-
-DatePicker.defaultProps={
-mode:'date',
-date:'',
-
-height:259,
-
-
-duration:300,
-confirmBtnText:'确定',
-cancelBtnText:'取消',
-iconSource:require(479 /* ./date_icon.png */),
-customStyles:{},
-
-
-showIcon:true,
-disabled:false,
-placeholder:'',
-modalOnResponderTerminationRequest:function modalOnResponderTerminationRequest(e){return true;}};
-
-
-DatePicker.propTypes={
-mode:_react2.default.PropTypes.oneOf(['date','datetime','time']),
-date:_react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string,_react2.default.PropTypes.instanceOf(Date)]),
-format:_react2.default.PropTypes.string,
-minDate:_react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string,_react2.default.PropTypes.instanceOf(Date)]),
-maxDate:_react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string,_react2.default.PropTypes.instanceOf(Date)]),
-height:_react2.default.PropTypes.number,
-duration:_react2.default.PropTypes.number,
-confirmBtnText:_react2.default.PropTypes.string,
-cancelBtnText:_react2.default.PropTypes.string,
-iconSource:_react2.default.PropTypes.oneOfType([_react2.default.PropTypes.number,_react2.default.PropTypes.object]),
-customStyles:_react2.default.PropTypes.object,
-showIcon:_react2.default.PropTypes.bool,
-disabled:_react2.default.PropTypes.bool,
-onDateChange:_react2.default.PropTypes.func,
-placeholder:_react2.default.PropTypes.string,
-modalOnResponderTerminationRequest:_react2.default.PropTypes.func,
-is24Hour:_react2.default.PropTypes.bool};exports.default=
-
-
-DatePicker;
-}, 476, null, "react-native-datepicker/index.js");
-__d(/* react-native-datepicker/style.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _reactNative=require(42 /* react-native */);
-
-var style=_reactNative.StyleSheet.create({
-dateTouch:{
-width:142},
-
-dateTouchBody:{
-flexDirection:'row',
-height:40,
-alignItems:'center',
-justifyContent:'center'},
-
-dateIcon:{
-width:32,
-height:32,
-marginLeft:5,
-marginRight:5},
-
-dateInput:{
-flex:1,
-height:40,
-borderWidth:1,
-borderColor:'#aaa',
-alignItems:'center',
-justifyContent:'center'},
-
-dateText:{
-color:'#333'},
-
-placeholderText:{
-color:'#c9c9c9'},
-
-datePickerMask:{
-flex:1,
-alignItems:'flex-end',
-flexDirection:'row',
-backgroundColor:'#00000077'},
-
-datePickerCon:{
-backgroundColor:'#fff',
-height:0,
-overflow:'hidden'},
-
-btnText:{
-position:'absolute',
-top:0,
-height:42,
-padding:20,
-flexDirection:'row',
-alignItems:'center',
-justifyContent:'center'},
-
-btnTextText:{
-fontSize:16,
-color:'#46cf98'},
-
-btnTextCancel:{
-color:'#666'},
-
-btnCancel:{
-left:0},
-
-btnConfirm:{
-right:0},
-
-datePicker:{
-marginTop:42,
-borderTopColor:'#ccc',
-borderTopWidth:1},
-
-disabled:{
-backgroundColor:'#eee'}});exports.default=
-
-
-
-style;
-}, 477, null, "react-native-datepicker/style.js");
 __d(/* moment/moment.js */function(global, require, module, exports) {
 
 
@@ -81706,6 +78440,3273 @@ return hooks;
 
 });
 }, 478, null, "moment/moment.js");
+__d(/* GurulaCoffee/app/Content.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNativeRouterFlux=require(400 /* react-native-router-flux */);
+var _reactNative=require(42 /* react-native */);
+var _PushController=require(451 /* ./PushController */);var _PushController2=babelHelpers.interopRequireDefault(_PushController);
+var _reactNativePushNotification=require(454 /* react-native-push-notification */);var _reactNativePushNotification2=babelHelpers.interopRequireDefault(_reactNativePushNotification);
+var _reactNativeAwesomeButton=require(456 /* react-native-awesome-button */);var _reactNativeAwesomeButton2=babelHelpers.interopRequireDefault(_reactNativeAwesomeButton);
+
+var apiUrl="http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/";
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+flex:1,
+justifyContent:'center',
+alignItems:'center',
+backgroundColor:'#F5FCFF'},
+
+welcome:{
+fontSize:20,
+textAlign:'center',
+margin:10},
+
+header:{
+fontSize:40,
+textAlign:'center',
+fontWeight:'bold'},
+
+response:{
+fontSize:30,
+textAlign:'center',
+fontWeight:'bold',
+color:'#841584'},
+
+button:{
+flexDirection:'row',
+margin:20},
+
+checkButtonBackground:{
+flex:1,
+height:40,
+borderRadius:4},
+
+checkButtonLabel:{
+fontSize:16,
+fontWeight:'bold',
+color:'white'},
+
+wrongResult:{
+fontSize:16}});var
+
+
+
+Content=function(_Component){babelHelpers.inherits(Content,_Component);
+function Content(props){babelHelpers.classCallCheck(this,Content);var _this=babelHelpers.possibleConstructorReturn(this,(Content.__proto__||Object.getPrototypeOf(Content)).call(this,
+props));
+
+_this.handleAppStateChange=_this.handleAppStateChange.bind(_this);
+_this.checkCoffeeState=_this.checkCoffeeState.bind(_this);
+_this.parseResponse=_this.parseResponse.bind(_this);
+
+_this.state={
+response:"",
+buttonState:'idle'};return _this;
+
+}babelHelpers.createClass(Content,[{key:'componentDidMount',value:function componentDidMount()
+
+{
+_reactNative.AppState.addEventListener('change',this.handleAppStateChange);
+}},{key:'componentWillUnmount',value:function componentWillUnmount()
+
+{
+_reactNative.AppState.removeEventListener('change',this.handleAppStateChange);
+}},{key:'handleAppStateChange',value:function handleAppStateChange(
+
+appState){
+if(appState==='active'){
+this.checkCoffeeState();
+}
+}},{key:'parseResponse',value:function parseResponse()
+
+{
+var response=this.state.response;
+if(response==="NO POT"){
+return"The lights don't seem to be on in Gurula.";
+}
+return this.state.response+" cups of coffee";
+}},{key:'render',value:function render()
+
+{
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.container},
+_react2.default.createElement(_reactNative.Text,{style:styles.header},'Gurula Coffee Informer'),
+
+
+_react2.default.createElement(_reactNative.View,{style:styles.button},
+_react2.default.createElement(_reactNativeAwesomeButton2.default,{
+backgroundStyle:styles.checkButtonBackground,
+labelStyle:styles.checkButtonLabel,
+transitionDuration:200,
+states:{
+idle:{
+text:'Check for coffee',
+onPress:this.checkCoffeeState,
+backgroundColor:'#1155DD'},
+
+busy:{
+text:'Checking',
+backgroundColor:'#002299',
+spinner:true},
+
+success:{
+text:this.parseResponse(),
+onPress:this.checkCoffeeState,
+backgroundColor:'#339944'}},
+
+
+buttonState:this.state.buttonState}),
+
+_react2.default.createElement(_reactNative.Text,{style:styles.response},' ')),
+
+_react2.default.createElement(_reactNative.Text,{
+style:styles.wrongResult,
+onPress:function onPress(){return _reactNativeRouterFlux.Actions.wrongResult();}},'Wrong result?'),
+
+
+_react2.default.createElement(_reactNative.View,{style:styles.button},
+_react2.default.createElement(_reactNativeAwesomeButton2.default,{
+backgroundStyle:styles.checkButtonBackground,
+labelStyle:styles.checkButtonLabel,
+states:{
+default:{
+text:'See the camera photo',
+onPress:function onPress(){return _reactNativeRouterFlux.Actions.coffeePic();},
+backgroundColor:'#1155DD'}}}),
+
+
+_react2.default.createElement(_reactNative.Text,{style:styles.response},' ')),
+
+_react2.default.createElement(_PushController2.default,null)));
+
+
+}},{key:'checkCoffeeState',value:function checkCoffeeState()
+
+{var _this2=this;
+this.setState({buttonState:"busy"});
+fetch(apiUrl).
+then(function(response){return response.json();}).
+then(function(responseJson){
+_this2.setState({
+response:responseJson.state,
+buttonState:"success"});
+
+}).
+catch(function(error){
+console.error(error);
+});
+}}]);return Content;}(_react.Component);exports.default=Content;
+}, 453, null, "GurulaCoffee/app/Content.js");
+__d(/* react-native-push-notification/index.js */function(global, require, module, exports) {
+
+
+
+'use strict';
+
+var RNNotificationsComponent=require(455 /* ./component */);
+
+var AppState=RNNotificationsComponent.state;
+var RNNotifications=RNNotificationsComponent.component;
+
+var Platform=require(42 /* react-native */).Platform;
+
+var Notifications={
+handler:RNNotifications,
+onRegister:false,
+onError:false,
+onNotification:false,
+onRemoteFetch:false,
+isLoaded:false,
+hasPoppedInitialNotification:false,
+
+isPermissionsRequestPending:false,
+
+permissions:{
+alert:true,
+badge:true,
+sound:true}};
+
+
+
+Notifications.callNative=function(name,params){
+if(typeof this.handler[name]==='function'){var _handler;
+if(typeof params!=='array'&&
+typeof params!=='object'){
+params=[];
+}
+
+return(_handler=this.handler)[name].apply(_handler,babelHelpers.toConsumableArray(params));
+}else{
+return null;
+}
+};
+
+
+
+
+
+
+
+
+
+
+Notifications.configure=function(options){
+if(typeof options.onRegister!=='undefined'){
+this.onRegister=options.onRegister;
+}
+
+if(typeof options.onError!=='undefined'){
+this.onError=options.onError;
+}
+
+if(typeof options.onNotification!=='undefined'){
+this.onNotification=options.onNotification;
+}
+
+if(typeof options.permissions!=='undefined'){
+this.permissions=options.permissions;
+}
+
+if(typeof options.senderID!=='undefined'){
+this.senderID=options.senderID;
+}
+
+if(typeof options.onRemoteFetch!=='undefined'){
+this.onRemoteFetch=options.onRemoteFetch;
+}
+
+if(this.isLoaded===false){
+this._onRegister=this._onRegister.bind(this);
+this._onNotification=this._onNotification.bind(this);
+this._onRemoteFetch=this._onRemoteFetch.bind(this);
+this.callNative('addEventListener',['register',this._onRegister]);
+this.callNative('addEventListener',['notification',this._onNotification]);
+this.callNative('addEventListener',['localNotification',this._onNotification]);
+Platform.OS==='android'?this.callNative('addEventListener',['remoteFetch',this._onRemoteFetch]):null;
+
+this.isLoaded=true;
+}
+
+if(this.hasPoppedInitialNotification===false&&(
+options.popInitialNotification===undefined||options.popInitialNotification===true)){
+this.popInitialNotification(function(firstNotification){
+if(firstNotification!==null){
+this._onNotification(firstNotification,true);
+}
+}.bind(this));
+this.hasPoppedInitialNotification=true;
+}
+
+if(options.requestPermissions!==false){
+this._requestPermissions();
+}
+
+};
+
+
+Notifications.unregister=function(){
+this.callNative('removeEventListener',['register',this._onRegister]);
+this.callNative('removeEventListener',['notification',this._onNotification]);
+this.callNative('removeEventListener',['localNotification',this._onNotification]);
+Platform.OS==='android'?this.callNative('removeEventListener',['remoteFetch',this._onRemoteFetch]):null;
+this.isLoaded=false;
+};
+
+
+
+
+
+
+
+
+
+Notifications.localNotification=function(details){
+if(Platform.OS==='ios'){
+
+
+var soundName=details.soundName?details.soundName:'default';
+
+if(details.hasOwnProperty('playSound')&&!details.playSound){
+soundName='';
+}
+
+
+
+
+this.handler.presentLocalNotification({
+alertTitle:details.title,
+alertBody:details.message,
+alertAction:details.alertAction,
+category:details.category,
+soundName:soundName,
+applicationIconBadgeNumber:details.number,
+userInfo:details.userInfo});
+
+}else{
+this.handler.presentLocalNotification(details);
+}
+};
+
+
+
+
+
+
+Notifications.localNotificationSchedule=function(details){
+if(Platform.OS==='ios'){
+this.handler.scheduleLocalNotification({
+fireDate:details.date.toISOString(),
+alertBody:details.message,
+userInfo:details.userInfo});
+
+}else{
+details.fireDate=details.date.getTime();
+delete details.date;
+this.handler.scheduleLocalNotification(details);
+}
+};
+
+
+Notifications._onRegister=function(token){
+if(this.onRegister!==false){
+this.onRegister({
+token:token,
+os:Platform.OS});
+
+}
+};
+
+Notifications._onRemoteFetch=function(notificationData){
+if(this.onRemoteFetch!==false){
+this.onRemoteFetch(notificationData);
+}
+};
+
+Notifications._onNotification=function(data){var isFromBackground=arguments.length>1&&arguments[1]!==undefined?arguments[1]:null;
+if(isFromBackground===null){
+isFromBackground=
+data.foreground===false||
+AppState.currentState==='background';
+
+}
+
+if(this.onNotification!==false){
+if(Platform.OS==='ios'){
+this.onNotification({
+foreground:!isFromBackground,
+userInteraction:isFromBackground,
+message:data.getMessage(),
+data:data.getData(),
+badge:data.getBadgeCount(),
+alert:data.getAlert(),
+sound:data.getSound()});
+
+}else{
+var notificationData=babelHelpers.extends({
+foreground:!isFromBackground},
+data);
+
+
+if(typeof notificationData.data==='string'){
+try{
+notificationData.data=JSON.parse(notificationData.data);
+}catch(e){
+
+}
+}
+
+this.onNotification(notificationData);
+}
+}
+};
+
+
+Notifications._onPermissionResult=function(){
+this.isPermissionsRequestPending=false;
+};
+
+
+Notifications._requestPermissions=function(){
+if(Platform.OS==='ios'){
+if(this.isPermissionsRequestPending===false){
+this.isPermissionsRequestPending=true;
+return this.callNative('requestPermissions',[this.permissions]).
+then(this._onPermissionResult.bind(this)).
+catch(this._onPermissionResult.bind(this));
+}
+}else if(typeof this.senderID!=='undefined'){
+return this.callNative('requestPermissions',[this.senderID]);
+}
+};
+
+
+Notifications.requestPermissions=function(){
+if(Platform.OS==='ios'){
+return this.callNative('requestPermissions',[this.permissions]);
+}else if(typeof this.senderID!=='undefined'){
+return this.callNative('requestPermissions',[this.senderID]);
+}
+};
+
+
+Notifications.presentLocalNotification=function(){
+return this.callNative('presentLocalNotification',arguments);
+};
+
+Notifications.scheduleLocalNotification=function(){
+return this.callNative('scheduleLocalNotification',arguments);
+};
+
+Notifications.cancelLocalNotifications=function(){
+return this.callNative('cancelLocalNotifications',arguments);
+};
+
+Notifications.cancelAllLocalNotifications=function(){
+return this.callNative('cancelAllLocalNotifications',arguments);
+};
+
+Notifications.setApplicationIconBadgeNumber=function(){
+return this.callNative('setApplicationIconBadgeNumber',arguments);
+};
+
+Notifications.getApplicationIconBadgeNumber=function(){
+return this.callNative('getApplicationIconBadgeNumber',arguments);
+};
+
+Notifications.popInitialNotification=function(handler){
+this.callNative('getInitialNotification').then(function(result){
+handler(result);
+});
+};
+
+Notifications.abandonPermissions=function(){
+return this.callNative('abandonPermissions',arguments);
+};
+
+Notifications.checkPermissions=function(){
+return this.callNative('checkPermissions',arguments);
+};
+
+Notifications.registerNotificationActions=function(){
+return this.callNative('registerNotificationActions',arguments);
+};
+
+Notifications.clearAllNotifications=function(){
+
+return this.callNative('clearAllNotifications',arguments);
+};
+
+module.exports=Notifications;
+}, 454, null, "react-native-push-notification/index.js");
+__d(/* react-native-push-notification/component/index.android.js */function(global, require, module, exports) {'use strict';var _require=
+
+
+
+
+require(42 /* react-native */),NativeModules=_require.NativeModules,DeviceEventEmitter=_require.DeviceEventEmitter;
+
+var RNPushNotification=NativeModules.RNPushNotification;
+var _notifHandlers=new Map();
+
+var DEVICE_NOTIF_EVENT='remoteNotificationReceived';
+var NOTIF_REGISTER_EVENT='remoteNotificationsRegistered';
+var REMOTE_FETCH_EVENT='remoteFetch';
+
+var NotificationsComponent=function NotificationsComponent(){
+
+};
+
+NotificationsComponent.prototype.getInitialNotification=function(){
+return RNPushNotification.getInitialNotification().
+then(function(notification){
+if(notification&&notification.dataJSON){
+return JSON.parse(notification.dataJSON);
+}
+return null;
+});
+};
+
+NotificationsComponent.prototype.requestPermissions=function(senderID){
+RNPushNotification.requestPermissions(senderID);
+};
+
+NotificationsComponent.prototype.cancelLocalNotifications=function(details){
+RNPushNotification.cancelLocalNotifications(details);
+};
+
+NotificationsComponent.prototype.cancelAllLocalNotifications=function(){
+RNPushNotification.cancelAllLocalNotifications();
+};
+
+NotificationsComponent.prototype.presentLocalNotification=function(details){
+RNPushNotification.presentLocalNotification(details);
+};
+
+NotificationsComponent.prototype.scheduleLocalNotification=function(details){
+RNPushNotification.scheduleLocalNotification(details);
+};
+
+NotificationsComponent.prototype.setApplicationIconBadgeNumber=function(number){
+if(!RNPushNotification.setApplicationIconBadgeNumber){
+return;
+}
+RNPushNotification.setApplicationIconBadgeNumber(number);
+};
+
+NotificationsComponent.prototype.abandonPermissions=function(){
+
+};
+
+NotificationsComponent.prototype.checkPermissions=function(callback){
+
+};
+
+NotificationsComponent.prototype.addEventListener=function(type,handler){
+var listener;
+if(type==='notification'){
+listener=DeviceEventEmitter.addListener(
+DEVICE_NOTIF_EVENT,
+function(notifData){
+var data=JSON.parse(notifData.dataJSON);
+handler(data);
+});
+
+}else if(type==='register'){
+listener=DeviceEventEmitter.addListener(
+NOTIF_REGISTER_EVENT,
+function(registrationInfo){
+handler(registrationInfo.deviceToken);
+});
+
+}else if(type==='remoteFetch'){
+listener=DeviceEventEmitter.addListener(
+REMOTE_FETCH_EVENT,
+function(notifData){
+var notificationData=JSON.parse(notifData.dataJSON);
+handler(notificationData);
+});
+
+}
+
+_notifHandlers.set(handler,listener);
+};
+
+NotificationsComponent.prototype.removeEventListener=function(type,handler){
+var listener=_notifHandlers.get(handler);
+if(!listener){
+return;
+}
+listener.remove();
+_notifHandlers.delete(handler);
+};
+
+NotificationsComponent.prototype.registerNotificationActions=function(details){
+RNPushNotification.registerNotificationActions(details);
+};
+
+NotificationsComponent.prototype.clearAllNotifications=function(){
+RNPushNotification.clearAllNotifications();
+};
+
+module.exports={
+state:false,
+component:new NotificationsComponent()};
+}, 455, null, "react-native-push-notification/component/index.android.js");
+__d(/* react-native-awesome-button/index.js */function(global, require, module, exports) {var AwesomeButton=require(457 /* ./src/AwesomeButton.js */);
+
+module.exports=AwesomeButton;
+}, 456, null, "react-native-awesome-button/index.js");
+__d(/* react-native-awesome-button/src/AwesomeButton.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+var _ProgressBar=require(458 /* ./ProgressBar */);var _ProgressBar2=babelHelpers.interopRequireDefault(_ProgressBar);var
+
+InnerButtonView=function(_Component){babelHelpers.inherits(InnerButtonView,_Component);function InnerButtonView(){babelHelpers.classCallCheck(this,InnerButtonView);return babelHelpers.possibleConstructorReturn(this,(InnerButtonView.__proto__||Object.getPrototypeOf(InnerButtonView)).apply(this,arguments));}babelHelpers.createClass(InnerButtonView,[{key:'render',value:function render()
+{
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.insideView},
+this.props.currentStateObject.spinner?_react2.default.createElement(_ProgressBar2.default,{color:this.props.spinnerColor,style:styles.activityIndicator}):null,
+_react2.default.createElement(_reactNative.Text,{style:this.props.labelStyle},this.props.currentStateObject.text)));
+
+
+}}]);return InnerButtonView;}(_react.Component);var
+
+
+
+AwesomeButton=function(_Component2){babelHelpers.inherits(AwesomeButton,_Component2);
+
+
+
+function AwesomeButton(props){babelHelpers.classCallCheck(this,AwesomeButton);var _this2=babelHelpers.possibleConstructorReturn(this,(AwesomeButton.__proto__||Object.getPrototypeOf(AwesomeButton)).call(this,
+props));
+var currentStateObject=_this2.props.states[_this2.props.buttonState]||_this2.getDefaultStateObject();
+_this2.state={
+backgroundColor:new _reactNative.Animated.Value(0),
+startColor:_this2.hexToRgb(currentStateObject.backgroundColor),
+endColor:_this2.hexToRgb(currentStateObject.backgroundColor)};return _this2;
+
+}babelHelpers.createClass(AwesomeButton,[{key:'componentWillReceiveProps',value:function componentWillReceiveProps(
+
+nextProps){
+var currentStateObject=this.props.states[this.props.buttonState]||this.getDefaultStateObject();
+var nextStateObject=nextProps.states[nextProps.buttonState]||this.getDefaultStateObject();
+this.setState({backgroundColor:new _reactNative.Animated.Value(0),startColor:this.hexToRgb(currentStateObject.backgroundColor),endColor:this.hexToRgb(nextStateObject.backgroundColor)});
+}},{key:'componentDidUpdate',value:function componentDidUpdate()
+
+{
+this.startAnimation();
+}},{key:'hexToRgb',value:function hexToRgb(
+
+hex){
+var shorthandRegex=/^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+hex=hex.replace(shorthandRegex,function(m,r,g,b){
+return r+r+g+g+b+b;
+});
+var result=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+return result?'rgb('+parseInt(result[1],16)+', '+parseInt(result[2],16)+', '+parseInt(result[3],16)+')':null;
+}},{key:'startAnimation',value:function startAnimation()
+
+{
+_reactNative.Animated.timing(this.state.backgroundColor,
+{
+toValue:1,
+duration:this.props.transitionDuration}).
+start();
+}},{key:'getDefaultStateObject',value:function getDefaultStateObject()
+
+{
+return(
+this.props.states[Object.keys(this.props.states)[0]]);
+
+}},{key:'render',value:function render()
+
+{
+var currentStateObject=this.props.states[this.props.buttonState]||this.getDefaultStateObject();
+
+var bgColor=this.state.backgroundColor.interpolate({
+inputRange:[0,1],
+outputRange:[this.state.startColor,this.state.endColor]});
+
+
+if(currentStateObject.onPress){
+return(
+_react2.default.createElement(_reactNative.TouchableOpacity,{style:{flex:1},activeOpacity:this.props.activeOpacity,onPress:currentStateObject.onPress},
+_react2.default.createElement(_reactNative.Animated.View,{style:[this.props.backgroundStyle,{backgroundColor:bgColor}]},
+_react2.default.createElement(InnerButtonView,{currentStateObject:currentStateObject,labelStyle:this.props.labelStyle,spinnerColor:this.props.spinnerColor}))));
+
+
+
+}else{
+return(
+_react2.default.createElement(_reactNative.Animated.View,{style:[this.props.backgroundStyle,{backgroundColor:bgColor}]},
+_react2.default.createElement(InnerButtonView,{currentStateObject:currentStateObject,labelStyle:this.props.labelStyle,spinnerColor:this.props.spinnerColor})));
+
+
+}
+}}]);return AwesomeButton;}(_react.Component);AwesomeButton.propTypes={states:_react.PropTypes.object.isRequired};exports.default=AwesomeButton;
+
+
+
+AwesomeButton.defaultProps={
+backgroundStyle:{
+flex:1,
+height:40,
+backgroundColor:'#477CCC',
+borderRadius:20},
+
+labelStyle:{
+color:'#FFFFFF'},
+
+spinnerColor:'#FFFFFF',
+transitionDuration:250,
+activeOpacity:0.92};
+
+
+
+var styles=_reactNative.StyleSheet.create({
+insideView:{
+flex:1,
+flexDirection:'row',
+alignItems:'center',
+alignSelf:'center'},
+
+activityIndicator:{
+marginRight:8},
+
+container:{
+flex:1}});
+}, 457, null, "react-native-awesome-button/src/AwesomeButton.js");
+__d(/* react-native-awesome-button/src/ProgressBar.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+
+var _reactNative=require(42 /* react-native */);var
+
+
+
+
+
+ProgressBar=function(_Component){babelHelpers.inherits(ProgressBar,_Component);function ProgressBar(){babelHelpers.classCallCheck(this,ProgressBar);return babelHelpers.possibleConstructorReturn(this,(ProgressBar.__proto__||Object.getPrototypeOf(ProgressBar)).apply(this,arguments));}babelHelpers.createClass(ProgressBar,[{key:'render',value:function render()
+{
+if(_reactNative.Platform.OS==='ios'){
+return(
+_react2.default.createElement(_reactNative.ActivityIndicatorIOS,{color:this.props.color,style:this.props.style}));
+
+}else{
+return(
+_react2.default.createElement(_reactNative.ProgressBarAndroid,{color:this.props.color,style:this.props.style,styleAttr:"Small"}));
+
+}
+}}]);return ProgressBar;}(_react.Component);exports.default=ProgressBar;
+}, 458, null, "react-native-awesome-button/src/ProgressBar.js");
+__d(/* GurulaCoffee/app/CoffeePic.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+var CoffeePic=function CoffeePic(){
+
+var coffeeUrl="http://gurula.wtf/kahvi/kahvi.jpg";
+coffeeUrl+='?random_number='+new Date().getTime();
+
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.container},
+_react2.default.createElement(_reactNative.Image,{
+style:styles.image,
+source:{uri:coffeeUrl}})));
+
+
+
+};
+var styles=_reactNative.StyleSheet.create({
+container:{
+flex:1,
+alignItems:'stretch'},
+
+image:{
+flex:1}});exports.default=
+
+
+
+CoffeePic;
+}, 459, null, "GurulaCoffee/app/CoffeePic.js");
+__d(/* GurulaCoffee/app/HowItWorks.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+var HowItWorks=function HowItWorks(){
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.container},
+_react2.default.createElement(_reactNative.Text,{style:styles.header},'How does it work?'),
+
+
+_react2.default.createElement(_reactNative.Text,{style:styles.body},'We\'re using machine learning to figure out how much coffee there is currently in the Gurula pan by looking at the camera. You can check the camera image to verify the algorithm\'s results. Any ideas and contributions are welcome at'),
+
+
+_react2.default.createElement(_reactNative.Text,{style:styles.address},'https://github.com/Coolnesss/coffee-api')));
+
+
+
+
+};
+var styles=_reactNative.StyleSheet.create({
+container:{
+flex:1,
+justifyContent:'center',
+alignItems:'center',
+backgroundColor:'#F5FCFF'},
+
+body:{
+fontSize:18,
+textAlign:'center',
+margin:5,
+fontWeight:'100'},
+
+header:{
+fontSize:40,
+textAlign:'center',
+fontWeight:'bold'},
+
+address:{
+fontSize:15,
+margin:5,
+borderRadius:5}});exports.default=
+
+
+
+HowItWorks;
+}, 460, null, "GurulaCoffee/app/HowItWorks.js");
+__d(/* GurulaCoffee/app/WrongResult.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+var _reactNativeAwesomeButton=require(456 /* react-native-awesome-button */);var _reactNativeAwesomeButton2=babelHelpers.interopRequireDefault(_reactNativeAwesomeButton);
+var _reactNativeTextinputEffects=require(462 /* react-native-textinput-effects */);
+var _reactNativeRouterFlux=require(400 /* react-native-router-flux */);
+
+
+var apiUrl="http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/";var
+
+WrongResult=function(_Component){babelHelpers.inherits(WrongResult,_Component);
+
+function WrongResult(props){babelHelpers.classCallCheck(this,WrongResult);var _this=babelHelpers.possibleConstructorReturn(this,(WrongResult.__proto__||Object.getPrototypeOf(WrongResult)).call(this,
+props));
+_this.onChange=_this.onChange.bind(_this);
+_this.postData=_this.postData.bind(_this);
+_this.scrollToBottom=_this.scrollToBottom.bind(_this);
+_this.contentHeight=0;
+_this.scrollViewHeight=0;
+_this.state={
+selected:0.0,
+response:"",
+buttonState:'idle'};return _this;
+
+}babelHelpers.createClass(WrongResult,[{key:'onChange',value:function onChange(
+
+text){
+var newText='';
+var numbers='0123456789.';
+
+for(var i=0;i<text.length;i++){
+if(numbers.indexOf(text[i])>-1){
+newText=newText+text[i];
+}
+}
+
+this.setState({selected:newText});
+}},{key:'postData',value:function postData()
+
+{var _this2=this;
+this.setState({buttonState:"busy"});
+fetch(apiUrl+"sample",{
+method:'POST',
+headers:{
+'Accept':'application/json',
+'Content-Type':'application/json'},
+
+body:JSON.stringify({
+sample:{
+label:this.state.selected}})}).
+
+
+then(function(response){return response.json();}).
+then(function(responseJson){
+_this2.setState({
+response:"OK",
+buttonState:"success"});
+
+}).
+catch(function(error){
+console.error(error);
+_this2.setState({
+buttonState:"fail"});
+
+});
+}},{key:'scrollToBottom',value:function scrollToBottom()
+
+{var animated=arguments.length>0&&arguments[0]!==undefined?arguments[0]:true;
+var scrollHeight=this.contentHeight-this.scrollViewHeight;
+if(scrollHeight>0){
+var scrollResponder=this.refs.scrollView.getScrollResponder();
+scrollResponder.scrollResponderScrollTo({x:0,y:scrollHeight,animated:animated});
+}
+}},{key:'render',value:function render()
+
+{var _this3=this;
+return(
+_react2.default.createElement(_reactNative.ScrollView,{
+ref:'scrollView',
+onContentSizeChange:function onContentSizeChange(w,h){return _this3.contentHeight=h;},
+onLayout:function onLayout(ev){return _this3.scrollViewHeight=ev.nativeEvent.layout.height;},
+style:styles.container,
+contentContainerStyle:styles.content},
+
+_react2.default.createElement(_reactNative.Text,{style:styles.title},'Wrong result?'),
+_react2.default.createElement(_reactNative.Text,{style:styles.subtext},'Step 1. Go to Gurula',
+"\n",'Step 2. Look at the coffee pan; there\'s a scale that shows the amount of coffee',
+"\n",'Step 3. Estimate how much coffee there is and if it\'s significantly different from the predicted amount, enter the correct amount here',
+"\n",'Step 4. Press submit.'),
+
+
+_react2.default.createElement(_reactNative.View,{style:[styles.card1]},
+_react2.default.createElement(_reactNativeTextinputEffects.Kaede,{
+onChangeText:function onChangeText(value){_this3.setState({selected:value});_this3.scrollToBottom();},
+style:styles.input,
+label:'Amount of coffee',
+labelStyle:{
+color:'white',
+backgroundColor:'#1155DD'},
+
+inputStyle:{
+color:'white',
+backgroundColor:'gray'},
+
+keyboardType:'numeric'})),
+
+
+_react2.default.createElement(_reactNative.View,{style:styles.button},
+_react2.default.createElement(_reactNativeAwesomeButton2.default,{
+backgroundStyle:styles.checkButtonBackground,
+labelStyle:styles.checkButtonLabel,
+transitionDuration:200,
+states:{
+idle:{
+text:'Submit',
+onPress:this.postData,
+backgroundColor:'#1155DD'},
+
+busy:{
+text:'Sending',
+backgroundColor:'#002299',
+spinner:true},
+
+success:{
+text:"Done",
+onPress:function onPress(){return _reactNativeRouterFlux.Actions.pop();},
+backgroundColor:'#339944'},
+
+fail:{
+text:"FAILED",
+backgroundColor:"red"}},
+
+
+buttonState:this.state.buttonState}),
+
+_react2.default.createElement(_reactNative.Text,{style:styles.response},' '))));
+
+
+
+
+}}]);return WrongResult;}(_react.Component);exports.default=WrongResult;
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+flex:1,
+paddingTop:70},
+
+content:{
+
+paddingBottom:300},
+
+card1:{
+paddingVertical:12},
+
+button:{
+padding:12},
+
+card2:{
+padding:16},
+
+input:{
+marginTop:4},
+
+title:{
+paddingBottom:16,
+textAlign:'center',
+color:'#404d5b',
+fontSize:40,
+fontWeight:'bold',
+opacity:0.8},
+
+subtext:{
+fontSize:20,
+padding:12},
+
+checkButtonLabel:{
+fontSize:16,
+fontWeight:'bold',
+color:'white'},
+
+checkButtonBackground:{
+borderRadius:4,
+height:40}});
+}, 461, null, "GurulaCoffee/app/WrongResult.js");
+__d(/* react-native-textinput-effects/lib/index.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.Fumi=exports.Sae=exports.Makiko=exports.Kohana=exports.Hideo=exports.Akira=exports.Madoka=exports.Isao=exports.Jiro=exports.Hoshi=exports.Kaede=undefined;var _Kaede=require(463 /* ./Kaede */);var _Kaede2=babelHelpers.interopRequireDefault(_Kaede);
+var _Hoshi=require(465 /* ./Hoshi */);var _Hoshi2=babelHelpers.interopRequireDefault(_Hoshi);
+var _Jiro=require(466 /* ./Jiro */);var _Jiro2=babelHelpers.interopRequireDefault(_Jiro);
+var _Isao=require(467 /* ./Isao */);var _Isao2=babelHelpers.interopRequireDefault(_Isao);
+var _Madoka=require(468 /* ./Madoka */);var _Madoka2=babelHelpers.interopRequireDefault(_Madoka);
+var _Akira=require(469 /* ./Akira */);var _Akira2=babelHelpers.interopRequireDefault(_Akira);
+var _Hideo=require(470 /* ./Hideo */);var _Hideo2=babelHelpers.interopRequireDefault(_Hideo);
+var _Kohana=require(471 /* ./Kohana */);var _Kohana2=babelHelpers.interopRequireDefault(_Kohana);
+var _Makiko=require(472 /* ./Makiko */);var _Makiko2=babelHelpers.interopRequireDefault(_Makiko);
+var _Sae=require(473 /* ./Sae */);var _Sae2=babelHelpers.interopRequireDefault(_Sae);
+var _Fumi=require(474 /* ./Fumi */);var _Fumi2=babelHelpers.interopRequireDefault(_Fumi);exports.
+
+
+Kaede=_Kaede2.default;exports.
+Hoshi=_Hoshi2.default;exports.
+Jiro=_Jiro2.default;exports.
+Isao=_Isao2.default;exports.
+Madoka=_Madoka2.default;exports.
+Akira=_Akira2.default;exports.
+Hideo=_Hideo2.default;exports.
+Kohana=_Kohana2.default;exports.
+Makiko=_Makiko2.default;exports.
+Sae=_Sae2.default;exports.
+Fumi=_Fumi2.default;
+}, 462, null, "react-native-textinput-effects/lib/index.js");
+__d(/* react-native-textinput-effects/lib/Kaede.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var PADDING=16;var
+
+Kaede=function(_BaseInput){babelHelpers.inherits(Kaede,_BaseInput);function Kaede(){babelHelpers.classCallCheck(this,Kaede);return babelHelpers.possibleConstructorReturn(this,(Kaede.__proto__||Object.getPrototypeOf(Kaede)).apply(this,arguments));}babelHelpers.createClass(Kaede,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+this.props,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,inputHeight=_props.height;var _state=
+this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
+var inputWidth=width*0.6;
+
+var flatLabelStyle=_reactNative.StyleSheet.flatten(labelStyle);
+var labelBackgroundColor='#EBEAEA';
+if(flatLabelStyle&&flatLabelStyle.backgroundColor){
+labelBackgroundColor=flatLabelStyle.backgroundColor;
+}
+
+return(
+_react2.default.createElement(_reactNative.View,{style:containerStyle,onLayout:this._onLayout},
+_react2.default.createElement(_reactNative.Animated.View,{style:{
+width:inputWidth,
+marginLeft:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[inputWidth*-1,0]})}},
+
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle,{height:inputHeight}],
+value:value,
+onBlur:this._onBlur,
+onFocus:this._onFocus,
+onChange:this._onChange,
+underlineColorAndroid:'transparent'}))),
+
+
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:{
+position:'absolute',
+justifyContent:'center',
+top:0,
+height:inputHeight,
+width:width,
+left:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[0,inputWidth]}),
+
+backgroundColor:labelBackgroundColor}},
+
+_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
+label)))));
+
+
+
+
+
+}}]);return Kaede;}(_BaseInput3.default);Kaede.propTypes={easing:_react.PropTypes.func,height:_react.PropTypes.number};Kaede.defaultProps={easing:_reactNative.Easing.bezier(0.2,1,0.3,1),height:60};exports.default=Kaede;
+
+
+var styles=_reactNative.StyleSheet.create({
+label:{
+marginHorizontal:PADDING,
+fontSize:16,
+fontWeight:'bold',
+color:'#6a7989'},
+
+textInput:{
+padding:PADDING,
+backgroundColor:'white',
+color:'black',
+fontSize:16,
+fontWeight:'bold'}});
+}, 463, null, "react-native-textinput-effects/lib/Kaede.js");
+__d(/* react-native-textinput-effects/lib/BaseInput.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+
+
+
+
+var _reactNative=require(42 /* react-native */);var
+
+
+
+
+
+BaseInput=function(_Component){babelHelpers.inherits(BaseInput,_Component);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function BaseInput(props,context){babelHelpers.classCallCheck(this,BaseInput);var _this=babelHelpers.possibleConstructorReturn(this,(BaseInput.__proto__||Object.getPrototypeOf(BaseInput)).call(this,
+props,context));
+
+_this._onLayout=_this._onLayout.bind(_this);
+_this._onChange=_this._onChange.bind(_this);
+_this._onBlur=_this._onBlur.bind(_this);
+_this._onFocus=_this._onFocus.bind(_this);
+_this.focus=_this.focus.bind(_this);
+
+var value=props.value||props.defaultValue;
+
+_this.state={
+value:value,
+focusedAnim:new _reactNative.Animated.Value(value?1:0)};return _this;
+
+}babelHelpers.createClass(BaseInput,[{key:'componentWillReceiveProps',value:function componentWillReceiveProps(
+
+newProps){
+var newValue=newProps.value;
+if(newProps.hasOwnProperty('value')&&newValue!==this.state.value){
+this.setState({
+value:newValue});
+
+
+
+
+var isFocused=this.refs.input.isFocused();
+if(!isFocused){
+var isActive=Boolean(newValue);
+if(isActive!==this.isActive){
+this._toggle(isActive);
+}
+}
+}
+}},{key:'_onLayout',value:function _onLayout(
+
+event){
+this.setState({
+width:event.nativeEvent.layout.width});
+
+}},{key:'_onChange',value:function _onChange(
+
+event){
+this.setState({
+value:event.nativeEvent.text});
+
+
+var onChange=this.props.onChange;
+if(onChange){
+onChange(event);
+}
+}},{key:'_onBlur',value:function _onBlur(
+
+event){
+if(!this.state.value){
+this._toggle(false);
+}
+
+var onBlur=this.props.onBlur;
+if(onBlur){
+onBlur(event);
+}
+}},{key:'_onFocus',value:function _onFocus(
+
+event){
+this._toggle(true);
+
+var onFocus=this.props.onFocus;
+if(onFocus){
+onFocus(event);
+}
+}},{key:'_toggle',value:function _toggle(
+
+isActive){
+this.isActive=isActive;
+_reactNative.Animated.timing(
+this.state.focusedAnim,{
+toValue:isActive?1:0,
+duration:this.props.animationDuration,
+easing:this.props.easing}).
+
+start();
+}},{key:'inputRef',value:function inputRef()
+
+
+
+{
+return this.refs.input;
+}},{key:'focus',value:function focus()
+
+{
+this.inputRef().focus();
+}},{key:'blur',value:function blur()
+
+{
+this.inputRef().blur();
+}},{key:'isFocused',value:function isFocused()
+
+{
+return this.inputRef().isFocused();
+}},{key:'clear',value:function clear()
+
+{
+this.inputRef().clear();
+}}]);return BaseInput;}(_react.Component);BaseInput.propTypes={label:_react.PropTypes.string,value:_react.PropTypes.string,defaultValue:_react.PropTypes.string,style:_reactNative.View.propTypes.style,inputStyle:_reactNative.Text.propTypes.style,labelStyle:_reactNative.Text.propTypes.style,easing:_react.PropTypes.func,animationDuration:_react.PropTypes.number,onBlur:_react.PropTypes.func,onFocus:_react.PropTypes.func,onChange:_react.PropTypes.func};exports.default=BaseInput;
+}, 464, null, "react-native-textinput-effects/lib/BaseInput.js");
+__d(/* react-native-textinput-effects/lib/Hoshi.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var PADDING=16;var
+
+Hoshi=function(_BaseInput){babelHelpers.inherits(Hoshi,_BaseInput);function Hoshi(){babelHelpers.classCallCheck(this,Hoshi);return babelHelpers.possibleConstructorReturn(this,(Hoshi.__proto__||Object.getPrototypeOf(Hoshi)).apply(this,arguments));}babelHelpers.createClass(Hoshi,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+
+
+this.props,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,maskColor=_props.maskColor,borderColor=_props.borderColor,inputHeight=_props.height;var _state=
+
+
+
+
+this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
+
+return(
+_react2.default.createElement(_reactNative.View,{
+style:[styles.container,containerStyle,{
+height:inputHeight+PADDING,
+width:width}],
+
+onLayout:this._onLayout},
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle,{
+width:width,
+height:inputHeight}],
+
+value:value,
+onBlur:this._onBlur,
+onChange:this._onChange,
+onFocus:this._onFocus,
+underlineColorAndroid:'transparent'})),
+
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this._focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:[styles.labelContainer,{
+opacity:focusedAnim.interpolate({
+inputRange:[0,0.5,1],
+outputRange:[1,0,1]}),
+
+top:focusedAnim.interpolate({
+inputRange:[0,0.5,0.51,1],
+outputRange:[24,24,0,0]}),
+
+left:focusedAnim.interpolate({
+inputRange:[0,0.5,0.51,1],
+outputRange:[PADDING,2*PADDING,0,PADDING]})}]},
+
+
+_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
+label))),
+
+
+
+_react2.default.createElement(_reactNative.View,{style:[styles.labelMask,{backgroundColor:maskColor}]}),
+_react2.default.createElement(_reactNative.Animated.View,{
+style:[styles.border,{
+width:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[0,width]}),
+
+backgroundColor:borderColor}]})));
+
+
+
+
+}}]);return Hoshi;}(_BaseInput3.default);Hoshi.propTypes={borderColor:_react.PropTypes.string,maskColor:_react.PropTypes.string,height:_react.PropTypes.number};Hoshi.defaultProps={borderColor:'red',height:48};exports.default=Hoshi;
+
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+borderBottomWidth:2,
+borderBottomColor:'#b9c1ca'},
+
+labelContainer:{
+position:'absolute'},
+
+label:{
+fontSize:16,
+color:'#6a7989'},
+
+textInput:{
+position:'absolute',
+bottom:2,
+left:PADDING,
+padding:0,
+color:'#6a7989',
+fontSize:18,
+fontWeight:'bold'},
+
+labelMask:{
+height:24,
+width:PADDING},
+
+border:{
+position:'absolute',
+bottom:0,
+left:0,
+right:0,
+height:3}});
+}, 465, null, "react-native-textinput-effects/lib/Hoshi.js");
+__d(/* react-native-textinput-effects/lib/Jiro.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var PADDING=16;var
+
+Jiro=function(_BaseInput){babelHelpers.inherits(Jiro,_BaseInput);
+
+
+
+
+
+
+
+
+
+
+
+function Jiro(props,context){babelHelpers.classCallCheck(this,Jiro);var _this=babelHelpers.possibleConstructorReturn(this,(Jiro.__proto__||Object.getPrototypeOf(Jiro)).call(this,
+props,context));
+
+var animationValue=props.value?1:0;
+_this.state={
+value:props.value,
+borderPositionAnim:new _reactNative.Animated.Value(animationValue),
+borderHeightAnim:new _reactNative.Animated.Value(animationValue),
+labelPositionAnim:new _reactNative.Animated.Value(animationValue)};return _this;
+
+}babelHelpers.createClass(Jiro,[{key:'_toggle',value:function _toggle(
+
+isActive){
+var animationValue=isActive?1:0;
+var borderPositionAnimation=_reactNative.Animated.timing(this.state.borderPositionAnim,{
+toValue:animationValue,
+eaasing:_reactNative.Easing.bezier(0.2,1,0.3,1),
+duration:200});
+
+var borderHeightAnimation=_reactNative.Animated.timing(this.state.borderHeightAnim,{
+toValue:animationValue,
+eaasing:_reactNative.Easing.ease,
+duration:200});
+
+var labelPositionAnimation=_reactNative.Animated.timing(this.state.labelPositionAnim,{
+toValue:animationValue,
+eaasing:_reactNative.Easing.ease,
+duration:200});
+
+
+if(isActive){
+_reactNative.Animated.sequence([
+borderPositionAnimation,
+_reactNative.Animated.parallel([labelPositionAnimation,borderHeightAnimation])]).
+start();
+}else{
+_reactNative.Animated.sequence([
+borderHeightAnimation,
+_reactNative.Animated.parallel([borderPositionAnimation,labelPositionAnimation])]).
+start();
+}
+}},{key:'render',value:function render()
+
+{var _props=
+
+
+
+
+
+
+
+this.props,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,borderColor=_props.borderColor,inputHeight=_props.height;var _state=
+
+
+
+
+
+
+this.state,width=_state.width,borderPositionAnim=_state.borderPositionAnim,borderHeightAnim=_state.borderHeightAnim,labelPositionAnim=_state.labelPositionAnim,value=_state.value;
+var totalHeight=inputHeight+2*PADDING;
+
+return(
+_react2.default.createElement(_reactNative.View,{
+style:[containerStyle,{
+height:totalHeight}],
+
+onLayout:this._onLayout},
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:[styles.border,{
+height:borderHeightAnim.interpolate({
+inputRange:[0,1],
+outputRange:[3,inputHeight]}),
+
+top:borderPositionAnim.interpolate({
+inputRange:[0,1],
+outputRange:[totalHeight-3,2*PADDING]}),
+
+backgroundColor:borderColor}]}),
+
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle,{
+width:width,
+height:inputHeight}],
+
+value:value,
+onBlur:this._onBlur,
+onChange:this._onChange,
+onFocus:this._onFocus,
+underlineColorAndroid:'transparent'})),
+
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:[styles.labelContainer,{
+bottom:labelPositionAnim.interpolate({
+inputRange:[0,1],
+outputRange:[PADDING/2,inputHeight+PADDING/4]})}]},
+
+
+_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
+label)))));
+
+
+
+
+
+}}]);return Jiro;}(_BaseInput3.default);Jiro.propTypes={borderColor:_react.PropTypes.string,height:_react.PropTypes.number};Jiro.defaultProps={borderColor:'red',height:48};exports.default=Jiro;
+
+
+var styles=_reactNative.StyleSheet.create({
+labelContainer:{
+position:'absolute',
+left:PADDING,
+backgroundColor:'transparent'},
+
+label:{
+fontFamily:'Arial',
+fontSize:13,
+fontWeight:'bold',
+color:'#6a7989'},
+
+textInput:{
+position:'absolute',
+bottom:0,
+padding:0,
+left:PADDING,
+color:'black',
+fontSize:18,
+fontWeight:'bold'},
+
+border:{
+position:'absolute',
+bottom:0,
+left:0,
+right:0}});
+}, 466, null, "react-native-textinput-effects/lib/Jiro.js");
+__d(/* react-native-textinput-effects/lib/Isao.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var LABEL_HEIGHT=24;
+var PADDING=16;var
+
+Isao=function(_BaseInput){babelHelpers.inherits(Isao,_BaseInput);function Isao(){babelHelpers.classCallCheck(this,Isao);return babelHelpers.possibleConstructorReturn(this,(Isao.__proto__||Object.getPrototypeOf(Isao)).apply(this,arguments));}babelHelpers.createClass(Isao,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+
+
+this.props,label=_props.label,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,activeColor=_props.activeColor,passiveColor=_props.passiveColor;var _state=
+
+
+
+
+this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
+
+return(
+_react2.default.createElement(_reactNative.View,{
+style:[containerStyle,{
+height:inputHeight+LABEL_HEIGHT}],
+
+onLayout:this._onLayout},
+
+_react2.default.createElement(_reactNative.View,{style:[styles.inputContainer,{
+height:inputHeight,
+borderBottomColor:passiveColor}]},
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle,{
+width:width,
+height:inputHeight}],
+
+value:value,
+onBlur:this._onBlur,
+onChange:this._onChange,
+onFocus:this._onFocus,
+underlineColorAndroid:'transparent'}))),
+
+
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.View,{style:{
+height:LABEL_HEIGHT,
+width:width}},
+
+
+_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,labelStyle,{
+width:width,
+opacity:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[1,0]}),
+
+bottom:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[0,LABEL_HEIGHT]}),
+
+color:passiveColor}]},
+
+label),
+
+
+_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,labelStyle,{
+opacity:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[0,1]}),
+
+bottom:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[LABEL_HEIGHT*-1,0]}),
+
+color:activeColor}]},
+
+label))),
+
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:[styles.border,{
+height:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[0,8]}),
+
+width:width,
+backgroundColor:activeColor}]})));
+
+
+
+
+}}]);return Isao;}(_BaseInput3.default);Isao.propTypes={passiveColor:_react.PropTypes.string,activeColor:_react.PropTypes.string,height:_react.PropTypes.number};Isao.defaultProps={activeColor:'red',passiveColor:'white',height:48,easing:_reactNative.Easing.bezier(0.2,1,0.3,1)};exports.default=Isao;
+
+
+var styles=_reactNative.StyleSheet.create({
+inputContainer:{
+borderBottomWidth:2},
+
+labelContainer:{
+paddingLeft:PADDING,
+height:LABEL_HEIGHT},
+
+label:{
+position:'absolute',
+height:LABEL_HEIGHT,
+left:PADDING,
+paddingTop:4,
+backgroundColor:'transparent',
+fontFamily:'Arial',
+fontSize:14,
+fontWeight:'bold'},
+
+textInput:{
+paddingHorizontal:PADDING,
+color:'#afb3b8',
+fontSize:18,
+fontWeight:'bold',
+padding:0},
+
+border:{
+position:'absolute',
+bottom:LABEL_HEIGHT,
+left:0,
+right:0}});
+}, 467, null, "react-native-textinput-effects/lib/Isao.js");
+__d(/* react-native-textinput-effects/lib/Madoka.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var LABEL_HEIGHT=24;
+var PADDING=16;var
+
+Madoka=function(_BaseInput){babelHelpers.inherits(Madoka,_BaseInput);function Madoka(){babelHelpers.classCallCheck(this,Madoka);return babelHelpers.possibleConstructorReturn(this,(Madoka.__proto__||Object.getPrototypeOf(Madoka)).apply(this,arguments));}babelHelpers.createClass(Madoka,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+
+this.props,label=_props.label,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,borderColor=_props.borderColor;var _state=
+
+
+
+
+this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
+
+return(
+_react2.default.createElement(_reactNative.View,{
+style:[containerStyle,{height:inputHeight+LABEL_HEIGHT+8}],
+onLayout:this._onLayout},
+
+_react2.default.createElement(_reactNative.View,{style:[styles.inputContainer,{borderBottomColor:borderColor}]},
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle,{
+width:width,
+height:inputHeight}],
+
+value:value,
+onBlur:this._onBlur,
+onChange:this._onChange,
+onFocus:this._onFocus,
+underlineColorAndroid:'transparent'})),
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:{
+position:'absolute',
+right:0,
+bottom:0,
+width:2,
+height:focusedAnim.interpolate({
+inputRange:[0,0.2,1],
+outputRange:[0,inputHeight,inputHeight]}),
+
+backgroundColor:borderColor}}),
+
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:{
+position:'absolute',
+right:0,
+top:0,
+height:2,
+width:focusedAnim.interpolate({
+inputRange:[0,0.2,0.8,1],
+outputRange:[0,0,width,width]}),
+
+backgroundColor:borderColor}}),
+
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:{
+position:'absolute',
+left:0,
+top:0,
+width:2,
+height:focusedAnim.interpolate({
+inputRange:[0,0.8,1],
+outputRange:[0,0,inputHeight]}),
+
+backgroundColor:borderColor}})),
+
+
+
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:[styles.labelContainer,{
+width:width,
+height:LABEL_HEIGHT,
+bottom:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[LABEL_HEIGHT+PADDING,0]})}]},
+
+
+_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,labelStyle,{
+fontSize:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[18,14]})}]},
+
+
+label)))));
+
+
+
+
+
+}}]);return Madoka;}(_BaseInput3.default);Madoka.propTypes={borderColor:_react.PropTypes.string,height:_react.PropTypes.number};Madoka.defaultProps={borderColor:'#7A7593',animationDuration:250,height:48};exports.default=Madoka;
+
+
+var styles=_reactNative.StyleSheet.create({
+inputContainer:{
+borderBottomWidth:2},
+
+labelContainer:{
+position:'absolute',
+left:PADDING},
+
+label:{
+backgroundColor:'transparent',
+fontFamily:'Arial',
+fontWeight:'bold',
+color:'#6a7989'},
+
+textInput:{
+paddingHorizontal:PADDING,
+paddingVertical:0,
+color:'black',
+fontSize:18,
+fontWeight:'bold'}});
+}, 468, null, "react-native-textinput-effects/lib/Madoka.js");
+__d(/* react-native-textinput-effects/lib/Akira.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var LABEL_HEIGHT=24;
+var PADDING=16;var
+
+Akira=function(_BaseInput){babelHelpers.inherits(Akira,_BaseInput);function Akira(){babelHelpers.classCallCheck(this,Akira);return babelHelpers.possibleConstructorReturn(this,(Akira.__proto__||Object.getPrototypeOf(Akira)).apply(this,arguments));}babelHelpers.createClass(Akira,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+
+this.props,label=_props.label,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle,borderColor=_props.borderColor;var _state=
+
+
+
+
+this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
+
+return(
+_react2.default.createElement(_reactNative.View,{style:containerStyle,onLayout:this._onLayout},
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:{
+width:width,
+height:LABEL_HEIGHT,
+transform:[{
+translateY:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[LABEL_HEIGHT+PADDING,0]})}]}},
+
+
+
+_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
+label))),
+
+
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle,{
+width:width,
+height:inputHeight}],
+
+value:value,
+onBlur:this._onBlur,
+onChange:this._onChange,
+onFocus:this._onFocus,
+underlineColorAndroid:'transparent'})),
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:{
+position:'absolute',
+left:0,
+bottom:0,
+height:inputHeight,
+width:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[6,1]}),
+
+backgroundColor:borderColor}}),
+
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:{
+position:'absolute',
+top:LABEL_HEIGHT,
+width:width,
+height:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[6,1]}),
+
+backgroundColor:borderColor}}),
+
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:{
+position:'absolute',
+right:0,
+bottom:0,
+height:inputHeight,
+width:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[6,1]}),
+
+backgroundColor:borderColor}}),
+
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:{
+position:'absolute',
+bottom:0,
+height:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[6,1]}),
+
+width:width,
+backgroundColor:borderColor}})));
+
+
+
+
+}}]);return Akira;}(_BaseInput3.default);Akira.propTypes={borderColor:_react.PropTypes.string,height:_react.PropTypes.number};Akira.defaultProps={borderColor:'#7A7593',height:48,animationDuration:200};exports.default=Akira;
+
+
+var styles=_reactNative.StyleSheet.create({
+label:{
+backgroundColor:'transparent',
+fontFamily:'Arial',
+fontSize:14,
+fontWeight:'bold',
+color:'#cc6055',
+textAlign:'center'},
+
+textInput:{
+paddingHorizontal:PADDING,
+padding:0,
+color:'black',
+fontSize:18,
+textAlign:'center'}});
+}, 469, null, "react-native-textinput-effects/lib/Akira.js");
+__d(/* react-native-textinput-effects/lib/Hideo.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);var
+
+Hideo=function(_BaseInput){babelHelpers.inherits(Hideo,_BaseInput);function Hideo(){babelHelpers.classCallCheck(this,Hideo);return babelHelpers.possibleConstructorReturn(this,(Hideo.__proto__||Object.getPrototypeOf(Hideo)).apply(this,arguments));}babelHelpers.createClass(Hideo,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+
+
+this.props,iconClass=_props.iconClass,iconColor=_props.iconColor,iconName=_props.iconName,iconBackgroundColor=_props.iconBackgroundColor,containerStyle=_props.style,inputStyle=_props.inputStyle,inputHeight=_props.height;var _state=
+
+
+
+this.state,focusedAnim=_state.focusedAnim,value=_state.value;
+var AnimatedIcon=_reactNative.Animated.createAnimatedComponent(iconClass);
+
+return(
+_react2.default.createElement(_reactNative.View,{style:[styles.container,containerStyle],onLayout:this._onLayout},
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:{
+backgroundColor:iconBackgroundColor,
+justifyContent:'center',
+alignItems:'center',
+height:inputHeight,
+width:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[60,40]})}},
+
+
+_react2.default.createElement(AnimatedIcon,{
+name:iconName,
+color:iconColor,
+style:{
+fontSize:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[25,15]})}}))),
+
+
+
+
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle],
+value:value,
+onBlur:this._onBlur,
+onChange:this._onChange,
+onFocus:this._onFocus,
+underlineColorAndroid:'transparent'}))));
+
+
+
+}}]);return Hideo;}(_BaseInput3.default);Hideo.propTypes={iconBackgroundColor:_react.PropTypes.string,iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string.isRequired,iconColor:_react.PropTypes.string};Hideo.defaultProps={iconColor:'white',iconBackgroundColor:'#899dda',height:48,animationDuration:200};exports.default=Hideo;
+
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+flex:1,
+flexDirection:'row'},
+
+textInput:{
+flex:1,
+paddingHorizontal:16,
+paddingVertical:0,
+color:'black',
+backgroundColor:'white',
+fontSize:18}});
+}, 470, null, "react-native-textinput-effects/lib/Hideo.js");
+__d(/* react-native-textinput-effects/lib/Kohana.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var PADDING=16;var
+
+Kohana=function(_BaseInput){babelHelpers.inherits(Kohana,_BaseInput);function Kohana(){babelHelpers.classCallCheck(this,Kohana);return babelHelpers.possibleConstructorReturn(this,(Kohana.__proto__||Object.getPrototypeOf(Kohana)).apply(this,arguments));}babelHelpers.createClass(Kohana,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+
+
+this.props,Icon=_props.iconClass,iconColor=_props.iconColor,iconName=_props.iconName,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle;var _state=
+this.state,focusedAnim=_state.focusedAnim,value=_state.value;
+
+return(
+_react2.default.createElement(_reactNative.View,{style:[styles.container,containerStyle],onLayout:this._onLayout},
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:{
+justifyContent:'center',
+padding:PADDING,
+marginLeft:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[-40,0]})}},
+
+
+_react2.default.createElement(Icon,{
+name:iconName,
+color:iconColor,
+size:25}))),
+
+
+
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:{
+position:'absolute',
+top:PADDING,
+left:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[PADDING,80]}),
+
+opacity:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[1,0]})}},
+
+
+_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle]},
+label))),
+
+
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle],
+value:value,
+onBlur:this._onBlur,
+onFocus:this._onFocus,
+onChange:this._onChange,
+underlineColorAndroid:'transparent'}))));
+
+
+
+}}]);return Kohana;}(_BaseInput3.default);Kohana.propTypes={iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string.isRequired,iconColor:_react.PropTypes.string};Kohana.defaultProps={easing:_reactNative.Easing.bezier(0.2,1,0.3,1)};exports.default=Kohana;
+
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+flex:1,
+flexDirection:'row',
+backgroundColor:'white',
+overflow:'hidden'},
+
+label:{
+fontSize:18,
+fontFamily:'Arial',
+fontWeight:'bold',
+color:'#D2D2D2'},
+
+textInput:{
+flex:1,
+paddingHorizontal:PADDING,
+paddingVertical:0,
+color:'black',
+fontSize:18}});
+}, 471, null, "react-native-textinput-effects/lib/Kohana.js");
+__d(/* react-native-textinput-effects/lib/Makiko.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var ICON_WIDTH=60;
+var ICON_SIZE=30;
+var PADDING=16;var
+
+Makiko=function(_BaseInput){babelHelpers.inherits(Makiko,_BaseInput);function Makiko(){babelHelpers.classCallCheck(this,Makiko);return babelHelpers.possibleConstructorReturn(this,(Makiko.__proto__||Object.getPrototypeOf(Makiko)).apply(this,arguments));}babelHelpers.createClass(Makiko,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+
+
+
+this.props,iconClass=_props.iconClass,iconColor=_props.iconColor,iconName=_props.iconName,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,label=_props.label,labelStyle=_props.labelStyle;var _state=
+
+
+
+
+this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
+var AnimatedIcon=_reactNative.Animated.createAnimatedComponent(iconClass);
+
+return(
+_react2.default.createElement(_reactNative.View,{style:[styles.container,containerStyle],onLayout:this._onLayout},
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.View,{style:{
+position:'absolute',
+height:inputHeight,
+width:width}},
+
+_react2.default.createElement(AnimatedIcon,{
+name:iconName,
+color:iconColor,
+style:{
+position:'absolute',
+backgroundColor:'transparent',
+top:focusedAnim.interpolate({
+inputRange:[0,0.2,1],
+outputRange:[8,ICON_SIZE*-1,ICON_SIZE*-1]}),
+
+left:focusedAnim.interpolate({
+inputRange:[0,0.2,1],
+outputRange:[PADDING,-22,-22]}),
+
+height:focusedAnim.interpolate({
+inputRange:[0,0.2,1],
+outputRange:[ICON_SIZE,inputHeight*2,inputHeight*2]}),
+
+fontSize:focusedAnim.interpolate({
+inputRange:[0,0.2,1],
+outputRange:[ICON_SIZE,ICON_SIZE*4,ICON_SIZE*4]})}}),
+
+
+
+_react2.default.createElement(_reactNative.Text,{style:[styles.label,labelStyle,{color:iconColor}]},
+label))),
+
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:{
+position:'absolute',
+backgroundColor:'white',
+left:ICON_WIDTH,
+height:inputHeight,
+width:focusedAnim.interpolate({
+inputRange:[0,0.2,1],
+outputRange:[0,0,width]})}}),
+
+
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle,{
+width:width,
+height:inputHeight}],
+
+value:value,
+onBlur:this._onBlur,
+onChange:this._onChange,
+onFocus:this._onFocus,
+underlineColorAndroid:'transparent'}))));
+
+
+
+}}]);return Makiko;}(_BaseInput3.default);Makiko.propTypes={iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string.isRequired,iconColor:_react.PropTypes.string};Makiko.defaultProps={iconColor:'white',height:48,easing:_reactNative.Easing.bezier(0.7,0,0.3,1),animationDuration:300};exports.default=Makiko;
+
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+backgroundColor:'#CBCBCB',
+overflow:'hidden'},
+
+label:{
+position:'absolute',
+top:PADDING,
+left:ICON_WIDTH,
+fontSize:16,
+fontFamily:'Arial',
+fontWeight:'bold',
+color:'white',
+backgroundColor:'transparent'},
+
+textInput:{
+paddingHorizontal:PADDING,
+paddingVertical:0,
+color:'black',
+fontSize:18}});
+}, 472, null, "react-native-textinput-effects/lib/Makiko.js");
+__d(/* react-native-textinput-effects/lib/Sae.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var LABEL_HEIGHT=24;
+var PADDING=16;var
+
+Sae=function(_BaseInput){babelHelpers.inherits(Sae,_BaseInput);function Sae(){babelHelpers.classCallCheck(this,Sae);return babelHelpers.possibleConstructorReturn(this,(Sae.__proto__||Object.getPrototypeOf(Sae)).apply(this,arguments));}babelHelpers.createClass(Sae,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+
+
+
+this.props,iconClass=_props.iconClass,iconColor=_props.iconColor,iconName=_props.iconName,label=_props.label,containerStyle=_props.style,inputHeight=_props.height,inputStyle=_props.inputStyle,labelStyle=_props.labelStyle;var _state=
+
+
+
+
+this.state,width=_state.width,focusedAnim=_state.focusedAnim,value=_state.value;
+var AnimatedIcon=_reactNative.Animated.createAnimatedComponent(iconClass);
+
+return(
+_react2.default.createElement(_reactNative.View,{
+style:[styles.container,containerStyle,{
+height:inputHeight+PADDING}],
+
+onLayout:this._onLayout},
+
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:{
+position:'absolute',
+bottom:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[0,LABEL_HEIGHT+PADDING]})}},
+
+
+_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,labelStyle,{
+fontSize:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[18,12]})}]},
+
+
+label))),
+
+
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,inputStyle,{
+width:width,
+height:inputHeight}],
+
+value:value,
+onBlur:this._onBlur,
+onChange:this._onChange,
+onFocus:this._onFocus,
+underlineColorAndroid:'transparent'})),
+
+_react2.default.createElement(AnimatedIcon,{
+name:iconName,
+color:iconColor,
+style:{
+position:'absolute',
+bottom:0,
+right:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[0,width+PADDING]}),
+
+transform:[{
+rotate:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:['0deg','-90deg']})}],
+
+
+fontSize:20,
+backgroundColor:'transparent'}}),
+
+
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:{
+position:'absolute',
+bottom:0,
+right:0,
+height:2,
+width:focusedAnim.interpolate({
+inputRange:[0,1],
+outputRange:[0,width]}),
+
+backgroundColor:iconColor}})));
+
+
+
+
+}}]);return Sae;}(_BaseInput3.default);Sae.propTypes={height:_react.PropTypes.number,iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string,iconColor:_react.PropTypes.string};Sae.defaultProps={iconColor:'white',height:48,animationDuration:300,iconName:'pencil'};exports.default=Sae;
+
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+overflow:'hidden'},
+
+label:{
+backgroundColor:'transparent',
+fontFamily:'Arial',
+fontWeight:'bold',
+color:'#7771ab'},
+
+textInput:{
+position:'absolute',
+bottom:0,
+left:0,
+paddingTop:PADDING/2,
+paddingLeft:0,
+color:'white',
+fontSize:18}});
+}, 473, null, "react-native-textinput-effects/lib/Sae.js");
+__d(/* react-native-textinput-effects/lib/Fumi.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+
+var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+
+var PADDING=16;
+var ICON_WIDTH=40;var
+
+Fumi=function(_BaseInput){babelHelpers.inherits(Fumi,_BaseInput);function Fumi(){babelHelpers.classCallCheck(this,Fumi);return babelHelpers.possibleConstructorReturn(this,(Fumi.__proto__||Object.getPrototypeOf(Fumi)).apply(this,arguments));}babelHelpers.createClass(Fumi,[{key:'render',value:function render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{var _props=
+
+
+
+
+
+
+
+
+
+
+this.props,iconClass=_props.iconClass,iconColor=_props.iconColor,passiveIconColor=_props.passiveIconColor,iconName=_props.iconName,label=_props.label,containerStyle=_props.style,inputStyle=_props.inputStyle,inputHeight=_props.height,labelStyle=_props.labelStyle;var _state=
+this.state,focusedAnim=_state.focusedAnim,value=_state.value;
+var AnimatedIcon=_reactNative.Animated.createAnimatedComponent(iconClass);
+var ANIM_PATH=PADDING+inputHeight;
+var NEGATIVE_ANIM_PATH=ANIM_PATH*-1;
+
+return(
+_react2.default.createElement(_reactNative.View,{style:[styles.container,containerStyle],onLayout:this._onLayout},
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(AnimatedIcon,{
+name:iconName,
+color:iconColor,
+size:20,
+style:{
+position:'absolute',
+left:PADDING,
+bottom:focusedAnim.interpolate({
+inputRange:[0,0.5,0.51,0.7,1],
+outputRange:[24,ANIM_PATH,NEGATIVE_ANIM_PATH,NEGATIVE_ANIM_PATH,24]}),
+
+color:focusedAnim.interpolate({
+inputRange:[0,0.5,1],
+outputRange:[passiveIconColor,iconColor,iconColor]})}})),
+
+
+
+
+_react2.default.createElement(_reactNative.View,{
+style:[styles.separator,{
+height:inputHeight,
+left:ICON_WIDTH+8}]}),
+
+
+_react2.default.createElement(_reactNative.TouchableWithoutFeedback,{onPress:this.focus},
+_react2.default.createElement(_reactNative.Animated.View,{style:{
+position:'absolute',
+left:ICON_WIDTH+PADDING,
+height:inputHeight,
+top:focusedAnim.interpolate({
+inputRange:[0,0.5,0.51,0.7,1],
+outputRange:[24,ANIM_PATH,NEGATIVE_ANIM_PATH,NEGATIVE_ANIM_PATH,PADDING/2]})}},
+
+
+_react2.default.createElement(_reactNative.Animated.Text,{style:[styles.label,{
+fontSize:focusedAnim.interpolate({
+inputRange:[0,0.7,0.71,1],
+outputRange:[16,16,12,12]}),
+
+color:focusedAnim.interpolate({
+inputRange:[0,0.7],
+outputRange:['#696969','#a3a3a3']})},
+
+labelStyle]},
+label))),
+
+
+
+_react2.default.createElement(_reactNative.TextInput,babelHelpers.extends({
+ref:'input'},
+this.props,{
+style:[styles.textInput,{
+marginLeft:ICON_WIDTH+PADDING,
+color:iconColor},
+inputStyle],
+value:value,
+onBlur:this._onBlur,
+onFocus:this._onFocus,
+onChange:this._onChange,
+underlineColorAndroid:'transparent'}))));
+
+
+
+}}]);return Fumi;}(_BaseInput3.default);Fumi.propTypes={iconClass:_react.PropTypes.func.isRequired,iconName:_react.PropTypes.string.isRequired,iconColor:_react.PropTypes.string,passiveIconColor:_react.PropTypes.string,height:_react.PropTypes.number};Fumi.defaultProps={height:48,iconColor:'#00aeef',passiveIconColor:'#a3a3a3',animationDuration:300};exports.default=Fumi;
+
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+overflow:'hidden',
+paddingTop:16,
+backgroundColor:'white'},
+
+label:{
+fontSize:18,
+fontFamily:'Arial',
+fontWeight:'bold'},
+
+textInput:{
+flex:1,
+color:'black',
+fontSize:18,
+padding:7,
+paddingLeft:0},
+
+separator:{
+position:'absolute',
+width:1,
+backgroundColor:'#f0f0f0',
+marginTop:-8}});
+}, 474, null, "react-native-textinput-effects/lib/Fumi.js");
+__d(/* GurulaCoffee/app/QuietHours.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+var _reactNativeDatepicker=require(476 /* react-native-datepicker */);var _reactNativeDatepicker2=babelHelpers.interopRequireDefault(_reactNativeDatepicker);var
+
+
+QuietHours=function(_Component){babelHelpers.inherits(QuietHours,_Component);
+
+function QuietHours(props){babelHelpers.classCallCheck(this,QuietHours);var _this=babelHelpers.possibleConstructorReturn(this,(QuietHours.__proto__||Object.getPrototypeOf(QuietHours)).call(this,
+props));
+_this.setTime=_this.setTime.bind(_this);
+
+_this.state={
+start:null,
+end:null};return _this;
+
+}babelHelpers.createClass(QuietHours,[{key:'componentWillMount',value:function componentWillMount()
+
+{var _this2=this;
+_reactNative.AsyncStorage.multiGet(["start","end"]).then(function(values){
+var start=values[0][1];
+var end=values[1][1];
+
+_this2.setState({
+start:start,
+end:end});
+
+});
+}},{key:'setTime',value:function setTime(
+
+time,type){
+this.setState(babelHelpers.defineProperty({},
+type,time));
+
+_reactNative.AsyncStorage.setItem(type,time);
+}},{key:'render',value:function render()
+
+{var _this3=this;
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.container},
+_react2.default.createElement(_reactNative.Text,{style:styles.header},'Select your quiet hours'),
+_react2.default.createElement(_reactNative.Text,{style:styles.text},'You won\'t be notified of coffee during this time',"\n"),
+_react2.default.createElement(_reactNative.View,{style:styles.timepickers},
+_react2.default.createElement(_reactNativeDatepicker2.default,{
+style:{width:200},
+date:this.state.start,
+mode:'time',
+format:'HH:mm',
+placeholder:'Select start time',
+confirmBtnText:'Confirm',
+cancelBtnText:'Cancel',
+minuteInterval:10,
+onDateChange:function onDateChange(time){_this3.setTime(time,"start");}}),
+
+_react2.default.createElement(_reactNative.Text,null,"\n"),
+_react2.default.createElement(_reactNativeDatepicker2.default,{
+style:{width:200},
+date:this.state.end,
+mode:'time',
+format:'HH:mm',
+placeholder:'Select end time',
+confirmBtnText:'Confirm',
+cancelBtnText:'Cancel',
+minuteInterval:10,
+onDateChange:function onDateChange(time){_this3.setTime(time,"end");}}))));
+
+
+
+
+}}]);return QuietHours;}(_react.Component);exports.default=QuietHours;
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+flex:1,
+alignItems:'center',
+justifyContent:'flex-start',
+paddingTop:70,
+backgroundColor:'#F5FCFF'},
+
+header:{
+fontSize:40,
+textAlign:'center',
+fontWeight:'bold'},
+
+text:{
+fontSize:16,
+textAlign:'center',
+paddingTop:20},
+
+timepickers:{
+alignItems:'flex-end',
+paddingTop:50}});
+}, 475, null, "GurulaCoffee/app/QuietHours.js");
+__d(/* react-native-datepicker/index.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
+var _reactNative=require(42 /* react-native */);
+
+
+
+
+
+
+
+
+
+
+
+var _style=require(477 /* ./style */);var _style2=babelHelpers.interopRequireDefault(_style);
+var _moment=require(478 /* moment */);var _moment2=babelHelpers.interopRequireDefault(_moment);
+
+var FORMATS={
+'date':'YYYY-MM-DD',
+'datetime':'YYYY-MM-DD HH:mm',
+'time':'HH:mm'};var
+
+
+DatePicker=function(_Component){babelHelpers.inherits(DatePicker,_Component);
+function DatePicker(props){babelHelpers.classCallCheck(this,DatePicker);var _this=babelHelpers.possibleConstructorReturn(this,(DatePicker.__proto__||Object.getPrototypeOf(DatePicker)).call(this,
+props));
+
+_this.state={
+date:_this.getDate(),
+modalVisible:false,
+animatedHeight:new _reactNative.Animated.Value(0)};
+
+
+_this.datePicked=_this.datePicked.bind(_this);
+_this.onPressDate=_this.onPressDate.bind(_this);
+_this.onPressCancel=_this.onPressCancel.bind(_this);
+_this.onPressConfirm=_this.onPressConfirm.bind(_this);
+_this.onDatePicked=_this.onDatePicked.bind(_this);
+_this.onTimePicked=_this.onTimePicked.bind(_this);
+_this.onDatetimePicked=_this.onDatetimePicked.bind(_this);
+_this.onDatetimeTimePicked=_this.onDatetimeTimePicked.bind(_this);
+_this.setModalVisible=_this.setModalVisible.bind(_this);return _this;
+}babelHelpers.createClass(DatePicker,[{key:'componentWillMount',value:function componentWillMount()
+
+{
+
+console.ignoredYellowBox=[
+'Warning: Failed propType'];
+
+
+}},{key:'setModalVisible',value:function setModalVisible(
+
+visible){var _props=
+this.props,height=_props.height,duration=_props.duration;
+
+this.setState({modalVisible:visible});
+
+
+if(visible){
+_reactNative.Animated.timing(
+this.state.animatedHeight,
+{
+toValue:height,
+duration:duration}).
+
+start();
+}else{
+this.setState({
+animatedHeight:new _reactNative.Animated.Value(0)});
+
+}
+}},{key:'onStartShouldSetResponder',value:function onStartShouldSetResponder(
+
+e){
+return true;
+}},{key:'onMoveShouldSetResponder',value:function onMoveShouldSetResponder(
+
+e){
+return true;
+}},{key:'onPressCancel',value:function onPressCancel()
+
+{
+this.setModalVisible(false);
+}},{key:'onPressConfirm',value:function onPressConfirm()
+
+{
+this.datePicked();
+this.setModalVisible(false);
+}},{key:'getDate',value:function getDate()
+
+{var date=arguments.length>0&&arguments[0]!==undefined?arguments[0]:this.props.date;var _props2=
+this.props,mode=_props2.mode,minDate=_props2.minDate,maxDate=_props2.maxDate,_props2$format=_props2.format,format=_props2$format===undefined?FORMATS[mode]:_props2$format;
+
+
+if(!date){
+var now=new Date();
+if(minDate){
+var _minDate=this.getDate(minDate);
+
+if(now<_minDate){
+return _minDate;
+}
+}
+
+if(maxDate){
+var _maxDate=this.getDate(maxDate);
+
+if(now>_maxDate){
+return _maxDate;
+}
+}
+
+return now;
+}
+
+if(date instanceof Date){
+return date;
+}
+
+return(0,_moment2.default)(date,format).toDate();
+}},{key:'getDateStr',value:function getDateStr()
+
+{var date=arguments.length>0&&arguments[0]!==undefined?arguments[0]:this.props.date;var _props3=
+this.props,mode=_props3.mode,_props3$format=_props3.format,format=_props3$format===undefined?FORMATS[mode]:_props3$format;
+
+if(date instanceof Date){
+return(0,_moment2.default)(date).format(format);
+}else{
+return(0,_moment2.default)(this.getDate(date)).format(format);
+}
+}},{key:'datePicked',value:function datePicked()
+
+{
+if(typeof this.props.onDateChange==='function'){
+this.props.onDateChange(this.getDateStr(this.state.date),this.state.date);
+}
+}},{key:'getTitleElement',value:function getTitleElement()
+
+{var _props4=
+this.props,date=_props4.date,placeholder=_props4.placeholder,customStyles=_props4.customStyles;
+
+if(!date&&placeholder){
+return _react2.default.createElement(_reactNative.Text,{style:[_style2.default.placeholderText,customStyles.placeholderText]},placeholder);
+}
+return _react2.default.createElement(_reactNative.Text,{style:[_style2.default.dateText,customStyles.dateText]},this.getDateStr());
+}},{key:'onDatePicked',value:function onDatePicked(_ref)
+
+{var action=_ref.action,year=_ref.year,month=_ref.month,day=_ref.day;
+if(action!==_reactNative.DatePickerAndroid.dismissedAction){
+this.setState({
+date:new Date(year,month,day)});
+
+this.datePicked();
+}
+}},{key:'onTimePicked',value:function onTimePicked(_ref2)
+
+{var action=_ref2.action,hour=_ref2.hour,minute=_ref2.minute;
+if(action!==_reactNative.DatePickerAndroid.dismissedAction){
+this.setState({
+date:(0,_moment2.default)().hour(hour).minute(minute).toDate()});
+
+this.datePicked();
+}
+}},{key:'onDatetimePicked',value:function onDatetimePicked(_ref3)
+
+{var action=_ref3.action,year=_ref3.year,month=_ref3.month,day=_ref3.day;var _props5=
+this.props,mode=_props5.mode,_props5$format=_props5.format,format=_props5$format===undefined?FORMATS[mode]:_props5$format,_props5$is24Hour=_props5.is24Hour,is24Hour=_props5$is24Hour===undefined?!format.match(/h|a/):_props5$is24Hour;
+
+if(action!==_reactNative.DatePickerAndroid.dismissedAction){
+var timeMoment=(0,_moment2.default)(this.state.date);
+
+_reactNative.TimePickerAndroid.open({
+hour:timeMoment.hour(),
+minute:timeMoment.minutes(),
+is24Hour:is24Hour}).
+then(this.onDatetimeTimePicked.bind(this,year,month,day));
+}
+}},{key:'onDatetimeTimePicked',value:function onDatetimeTimePicked(
+
+year,month,day,_ref4){var action=_ref4.action,hour=_ref4.hour,minute=_ref4.minute;
+if(action!==_reactNative.DatePickerAndroid.dismissedAction){
+this.setState({
+date:new Date(year,month,day,hour,minute)});
+
+this.datePicked();
+}
+}},{key:'onPressDate',value:function onPressDate()
+
+{
+if(this.props.disabled){
+return true;
+}
+
+
+this.setState({
+date:this.getDate()});
+
+
+if(_reactNative.Platform.OS==='ios'){
+this.setModalVisible(true);
+}else{var _props6=
+
+this.props,mode=_props6.mode,_props6$format=_props6.format,format=_props6$format===undefined?FORMATS[mode]:_props6$format,minDate=_props6.minDate,maxDate=_props6.maxDate,_props6$is24Hour=_props6.is24Hour,is24Hour=_props6$is24Hour===undefined?!format.match(/h|a/):_props6$is24Hour;
+
+
+if(mode==='date'){
+_reactNative.DatePickerAndroid.open({
+date:this.state.date,
+minDate:minDate&&this.getDate(minDate),
+maxDate:maxDate&&this.getDate(maxDate)}).
+then(this.onDatePicked);
+}else if(mode==='time'){
+
+
+var timeMoment=(0,_moment2.default)(this.state.date);
+
+_reactNative.TimePickerAndroid.open({
+hour:timeMoment.hour(),
+minute:timeMoment.minutes(),
+is24Hour:is24Hour}).
+then(this.onTimePicked);
+}else if(mode==='datetime'){
+
+
+_reactNative.DatePickerAndroid.open({
+date:this.state.date,
+minDate:minDate&&this.getDate(minDate),
+maxDate:maxDate&&this.getDate(maxDate)}).
+then(this.onDatetimePicked);
+}
+}
+}},{key:'render',value:function render()
+
+{var _this2=this;var _props7=
+
+
+
+
+
+
+
+
+
+
+
+
+
+this.props,mode=_props7.mode,style=_props7.style,customStyles=_props7.customStyles,disabled=_props7.disabled,showIcon=_props7.showIcon,iconSource=_props7.iconSource,minDate=_props7.minDate,maxDate=_props7.maxDate,minuteInterval=_props7.minuteInterval,timeZoneOffsetInMinutes=_props7.timeZoneOffsetInMinutes,cancelBtnText=_props7.cancelBtnText,confirmBtnText=_props7.confirmBtnText;
+
+var dateInputStyle=[
+_style2.default.dateInput,customStyles.dateInput,
+disabled&&_style2.default.disabled,
+disabled&&customStyles.disabled];
+
+
+return(
+_react2.default.createElement(_reactNative.TouchableHighlight,{
+style:[_style2.default.dateTouch,style],
+underlayColor:'transparent',
+onPress:this.onPressDate},
+
+_react2.default.createElement(_reactNative.View,{style:[_style2.default.dateTouchBody,customStyles.dateTouchBody]},
+_react2.default.createElement(_reactNative.View,{style:dateInputStyle},
+this.getTitleElement()),
+
+showIcon&&_react2.default.createElement(_reactNative.Image,{
+style:[_style2.default.dateIcon,customStyles.dateIcon],
+source:iconSource}),
+
+_reactNative.Platform.OS==='ios'&&_react2.default.createElement(_reactNative.Modal,{
+transparent:true,
+visible:this.state.modalVisible,
+onRequestClose:function onRequestClose(){_this2.setModalVisible(false);}},
+
+_react2.default.createElement(_reactNative.View,{
+style:{flex:1}},
+
+_react2.default.createElement(_reactNative.TouchableHighlight,{
+style:_style2.default.datePickerMask,
+activeOpacity:1,
+underlayColor:'#00000077',
+onPress:this.onPressCancel},
+
+_react2.default.createElement(_reactNative.TouchableHighlight,{
+underlayColor:'#fff',
+style:{flex:1}},
+
+_react2.default.createElement(_reactNative.Animated.View,{
+style:[_style2.default.datePickerCon,{height:this.state.animatedHeight},customStyles.datePickerCon]},
+
+_react2.default.createElement(_reactNative.DatePickerIOS,{
+date:this.state.date,
+mode:mode,
+minimumDate:minDate&&this.getDate(minDate),
+maximumDate:maxDate&&this.getDate(maxDate),
+onDateChange:function onDateChange(date){return _this2.setState({date:date});},
+minuteInterval:minuteInterval,
+timeZoneOffsetInMinutes:timeZoneOffsetInMinutes,
+style:[_style2.default.datePicker,customStyles.datePicker]}),
+
+_react2.default.createElement(_reactNative.TouchableHighlight,{
+underlayColor:'transparent',
+onPress:this.onPressCancel,
+style:[_style2.default.btnText,_style2.default.btnCancel,customStyles.btnCancel]},
+
+_react2.default.createElement(_reactNative.Text,{
+style:[_style2.default.btnTextText,_style2.default.btnTextCancel,customStyles.btnTextCancel]},
+
+cancelBtnText)),
+
+
+_react2.default.createElement(_reactNative.TouchableHighlight,{
+underlayColor:'transparent',
+onPress:this.onPressConfirm,
+style:[_style2.default.btnText,_style2.default.btnConfirm,customStyles.btnConfirm]},
+
+_react2.default.createElement(_reactNative.Text,{style:[_style2.default.btnTextText,customStyles.btnTextConfirm]},confirmBtnText))))))))));
+
+
+
+
+
+
+
+
+
+}}]);return DatePicker;}(_react.Component);
+
+
+DatePicker.defaultProps={
+mode:'date',
+date:'',
+
+height:259,
+
+
+duration:300,
+confirmBtnText:'确定',
+cancelBtnText:'取消',
+iconSource:require(479 /* ./date_icon.png */),
+customStyles:{},
+
+
+showIcon:true,
+disabled:false,
+placeholder:'',
+modalOnResponderTerminationRequest:function modalOnResponderTerminationRequest(e){return true;}};
+
+
+DatePicker.propTypes={
+mode:_react2.default.PropTypes.oneOf(['date','datetime','time']),
+date:_react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string,_react2.default.PropTypes.instanceOf(Date)]),
+format:_react2.default.PropTypes.string,
+minDate:_react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string,_react2.default.PropTypes.instanceOf(Date)]),
+maxDate:_react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string,_react2.default.PropTypes.instanceOf(Date)]),
+height:_react2.default.PropTypes.number,
+duration:_react2.default.PropTypes.number,
+confirmBtnText:_react2.default.PropTypes.string,
+cancelBtnText:_react2.default.PropTypes.string,
+iconSource:_react2.default.PropTypes.oneOfType([_react2.default.PropTypes.number,_react2.default.PropTypes.object]),
+customStyles:_react2.default.PropTypes.object,
+showIcon:_react2.default.PropTypes.bool,
+disabled:_react2.default.PropTypes.bool,
+onDateChange:_react2.default.PropTypes.func,
+placeholder:_react2.default.PropTypes.string,
+modalOnResponderTerminationRequest:_react2.default.PropTypes.func,
+is24Hour:_react2.default.PropTypes.bool};exports.default=
+
+
+DatePicker;
+}, 476, null, "react-native-datepicker/index.js");
+__d(/* react-native-datepicker/style.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _reactNative=require(42 /* react-native */);
+
+var style=_reactNative.StyleSheet.create({
+dateTouch:{
+width:142},
+
+dateTouchBody:{
+flexDirection:'row',
+height:40,
+alignItems:'center',
+justifyContent:'center'},
+
+dateIcon:{
+width:32,
+height:32,
+marginLeft:5,
+marginRight:5},
+
+dateInput:{
+flex:1,
+height:40,
+borderWidth:1,
+borderColor:'#aaa',
+alignItems:'center',
+justifyContent:'center'},
+
+dateText:{
+color:'#333'},
+
+placeholderText:{
+color:'#c9c9c9'},
+
+datePickerMask:{
+flex:1,
+alignItems:'flex-end',
+flexDirection:'row',
+backgroundColor:'#00000077'},
+
+datePickerCon:{
+backgroundColor:'#fff',
+height:0,
+overflow:'hidden'},
+
+btnText:{
+position:'absolute',
+top:0,
+height:42,
+padding:20,
+flexDirection:'row',
+alignItems:'center',
+justifyContent:'center'},
+
+btnTextText:{
+fontSize:16,
+color:'#46cf98'},
+
+btnTextCancel:{
+color:'#666'},
+
+btnCancel:{
+left:0},
+
+btnConfirm:{
+right:0},
+
+datePicker:{
+marginTop:42,
+borderTopColor:'#ccc',
+borderTopWidth:1},
+
+disabled:{
+backgroundColor:'#eee'}});exports.default=
+
+
+
+style;
+}, 477, null, "react-native-datepicker/style.js");
 __d(/* react-native-datepicker/date_icon.png */function(global, require, module, exports) {module.exports = require(172 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/node_modules/react-native-datepicker","width":64,"height":64,"scales":[1],"hash":"1edd5017f455b09c608e175b1285c06d","name":"date_icon","type":"png"});
 }, 479, null, "react-native-datepicker/date_icon.png");
 ;require(192);
