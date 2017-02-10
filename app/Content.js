@@ -79,7 +79,7 @@ export default class Content extends Component {
 
   parseResponse() {
     let response = this.state.response;
-    if (response === "NO LIGHTS") {
+    if (response === "NO POT") {
       return "The lights don't seem to be on in Gurula.";
     }
     return this.state.response + " cups of coffee";
@@ -135,7 +135,7 @@ export default class Content extends Component {
                          }} />
                          <Text style={styles.response}> </Text>
                      </View>
-                    <PushController />
+                     <PushController />
         </View>
     );
   }

@@ -67932,7 +67932,7 @@ var _Content=require(453 /* ./Content */);var _Content2=babelHelpers.interopRequ
 var _CoffeePic=require(459 /* ./CoffeePic */);var _CoffeePic2=babelHelpers.interopRequireDefault(_CoffeePic);
 var _HowItWorks=require(460 /* ./HowItWorks */);var _HowItWorks2=babelHelpers.interopRequireDefault(_HowItWorks);
 var _WrongResult=require(461 /* ./WrongResult */);var _WrongResult2=babelHelpers.interopRequireDefault(_WrongResult);
-var _QuietHours=require(476 /* ./QuietHours */);var _QuietHours2=babelHelpers.interopRequireDefault(_QuietHours);
+var _QuietHours=require(475 /* ./QuietHours */);var _QuietHours2=babelHelpers.interopRequireDefault(_QuietHours);
 
 console.disableYellowBox=true;
 
@@ -72207,7 +72207,7 @@ ReactNative.Image,Platform=ReactNative.Platform,StyleSheet=ReactNative.StyleShee
 
 var NavigationHeaderBackButton=function NavigationHeaderBackButton(props){return(
 React.createElement(TouchableOpacity,{style:styles.buttonContainer,onPress:function onPress(){return props.onNavigate(NavigationRootContainer.getBackAction());}},
-React.createElement(Image,{style:styles.button,source:require(475 /* ./assets/back.png */)})));};
+React.createElement(Image,{style:styles.button,source:require(435 /* ./assets/back.png */)})));};
 
 
 
@@ -72233,7 +72233,7 @@ resizeMode:'contain'}});
 module.exports=NavigationContainer.create(NavigationHeaderBackButton);
 }, 434, null, "react-native-experimental-navigation/NavigationHeaderBackButton.js");
 __d(/* react-native-experimental-navigation/assets/back.png */function(global, require, module, exports) {module.exports = require(172 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/node_modules/react-native-experimental-navigation/assets","width":24,"height":24,"scales":[1,1.5,2,3,4],"hash":"a364dc7a784101f7c8f6791c7b4514ce","name":"back","type":"png"});
-}, 475, null, "react-native-experimental-navigation/assets/back.png");
+}, 435, null, "react-native-experimental-navigation/assets/back.png");
 __d(/* react-native-experimental-navigation/NavigationHeaderStyleInterpolator.js */function(global, require, module, exports) {
 
 
@@ -74036,7 +74036,6 @@ _reactNativeFcm2.default.subscribeToTopic('/topics/coffee');
 {
 
 this.notificationListener.remove();
-this.refreshTokenListener.remove();
 _reactNativeFcm2.default.unsubscribeFromTopic('/topics/coffee');
 }},{key:'render',value:function render()
 
@@ -76868,7 +76867,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _reactNativeDatepicker=require(477 /* react-native-datepicker */);var _reactNativeDatepicker2=babelHelpers.interopRequireDefault(_reactNativeDatepicker);var
+var _reactNativeDatepicker=require(476 /* react-native-datepicker */);var _reactNativeDatepicker2=babelHelpers.interopRequireDefault(_reactNativeDatepicker);var
 
 
 QuietHours=function(_Component){babelHelpers.inherits(QuietHours,_Component);
@@ -76957,7 +76956,7 @@ paddingTop:20},
 timepickers:{
 alignItems:'flex-end',
 paddingTop:50}});
-}, 476, null, "GurulaCoffee/app/QuietHours.js");
+}, 475, null, "GurulaCoffee/app/QuietHours.js");
 __d(/* react-native-datepicker/index.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -76971,8 +76970,8 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _style=require(478 /* ./style */);var _style2=babelHelpers.interopRequireDefault(_style);
-var _moment=require(479 /* moment */);var _moment2=babelHelpers.interopRequireDefault(_moment);
+var _style=require(477 /* ./style */);var _style2=babelHelpers.interopRequireDefault(_style);
+var _moment=require(478 /* moment */);var _moment2=babelHelpers.interopRequireDefault(_moment);
 
 var FORMATS={
 'date':'YYYY-MM-DD',
@@ -77296,7 +77295,7 @@ height:259,
 duration:300,
 confirmBtnText:'确定',
 cancelBtnText:'取消',
-iconSource:require(480 /* ./date_icon.png */),
+iconSource:require(479 /* ./date_icon.png */),
 customStyles:{},
 
 
@@ -77327,7 +77326,7 @@ is24Hour:_react2.default.PropTypes.bool};exports.default=
 
 
 DatePicker;
-}, 477, null, "react-native-datepicker/index.js");
+}, 476, null, "react-native-datepicker/index.js");
 __d(/* react-native-datepicker/style.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _reactNative=require(42 /* react-native */);
 
 var style=_reactNative.StyleSheet.create({
@@ -77404,7 +77403,7 @@ backgroundColor:'#eee'}});exports.default=
 
 
 style;
-}, 478, null, "react-native-datepicker/style.js");
+}, 477, null, "react-native-datepicker/style.js");
 __d(/* moment/moment.js */function(global, require, module, exports) {
 
 
@@ -81706,9 +81705,9 @@ hooks.prototype=proto;
 return hooks;
 
 });
-}, 479, null, "moment/moment.js");
+}, 478, null, "moment/moment.js");
 __d(/* react-native-datepicker/date_icon.png */function(global, require, module, exports) {module.exports = require(172 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/node_modules/react-native-datepicker","width":64,"height":64,"scales":[1],"hash":"1edd5017f455b09c608e175b1285c06d","name":"date_icon","type":"png"});
-}, 480, null, "react-native-datepicker/date_icon.png");
+}, 479, null, "react-native-datepicker/date_icon.png");
 ;require(192);
 ;require(0);
 //# sourceMappingURL=/index.android.map?platform=android
