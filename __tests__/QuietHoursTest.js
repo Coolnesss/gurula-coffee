@@ -17,7 +17,7 @@ it('renders correctly', () => {
 it("when notifications are disabled, shows that they are disabled", () => {
   AsyncStorage.multiGet = jest.fn((item) => {
     return new Promise((resolve, reject) => {
-        resolve([["start", "22:00"], ["end", "10:00"], ["update", "false"]]);
+        resolve([["update", "false"]]);
       });
   });
 

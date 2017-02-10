@@ -67928,11 +67928,11 @@ var _reactNative=require(42 /* react-native */);
 
 var _reactNativeRouterFlux=require(400 /* react-native-router-flux */);
 var _SettingsScreen=require(447 /* ./SettingsScreen */);var _SettingsScreen2=babelHelpers.interopRequireDefault(_SettingsScreen);
-var _Content=require(453 /* ./Content */);var _Content2=babelHelpers.interopRequireDefault(_Content);
-var _CoffeePic=require(459 /* ./CoffeePic */);var _CoffeePic2=babelHelpers.interopRequireDefault(_CoffeePic);
-var _HowItWorks=require(460 /* ./HowItWorks */);var _HowItWorks2=babelHelpers.interopRequireDefault(_HowItWorks);
-var _WrongResult=require(461 /* ./WrongResult */);var _WrongResult2=babelHelpers.interopRequireDefault(_WrongResult);
-var _QuietHours=require(475 /* ./QuietHours */);var _QuietHours2=babelHelpers.interopRequireDefault(_QuietHours);
+var _Content=require(454 /* ./Content */);var _Content2=babelHelpers.interopRequireDefault(_Content);
+var _CoffeePic=require(460 /* ./CoffeePic */);var _CoffeePic2=babelHelpers.interopRequireDefault(_CoffeePic);
+var _HowItWorks=require(461 /* ./HowItWorks */);var _HowItWorks2=babelHelpers.interopRequireDefault(_HowItWorks);
+var _WrongResult=require(462 /* ./WrongResult */);var _WrongResult2=babelHelpers.interopRequireDefault(_WrongResult);
+var _QuietHours=require(476 /* ./QuietHours */);var _QuietHours2=babelHelpers.interopRequireDefault(_QuietHours);
 
 console.disableYellowBox=true;
 
@@ -73988,7 +73988,7 @@ __d(/* react-native-settings-list/img/icon-arrow-settings.png */function(global,
 __d(/* GurulaCoffee/app/PushController.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 var _reactNativeFcm=require(452 /* react-native-fcm */);var _reactNativeFcm2=babelHelpers.interopRequireDefault(_reactNativeFcm);
-var moment=require(478 /* moment */);var
+var moment=require(453 /* moment */);var
 
 
 PushController=function(_Component){babelHelpers.inherits(PushController,_Component);
@@ -73999,7 +73999,6 @@ _this.notifyUser=_this.notifyUser.bind(_this);return _this;
 }babelHelpers.createClass(PushController,[{key:'notifyUser',value:function notifyUser(
 
 message){
-
 _reactNative.AsyncStorage.multiGet(["update","start","end"]).then(function(values){
 
 if(values[0][1]==="false")return;
@@ -78439,13 +78438,13 @@ hooks.prototype=proto;
 return hooks;
 
 });
-}, 478, null, "moment/moment.js");
+}, 453, null, "moment/moment.js");
 __d(/* GurulaCoffee/app/Content.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNativeRouterFlux=require(400 /* react-native-router-flux */);
 var _reactNative=require(42 /* react-native */);
 var _PushController=require(451 /* ./PushController */);var _PushController2=babelHelpers.interopRequireDefault(_PushController);
-var _reactNativePushNotification=require(454 /* react-native-push-notification */);var _reactNativePushNotification2=babelHelpers.interopRequireDefault(_reactNativePushNotification);
-var _reactNativeAwesomeButton=require(456 /* react-native-awesome-button */);var _reactNativeAwesomeButton2=babelHelpers.interopRequireDefault(_reactNativeAwesomeButton);
+var _reactNativePushNotification=require(455 /* react-native-push-notification */);var _reactNativePushNotification2=babelHelpers.interopRequireDefault(_reactNativePushNotification);
+var _reactNativeAwesomeButton=require(457 /* react-native-awesome-button */);var _reactNativeAwesomeButton2=babelHelpers.interopRequireDefault(_reactNativeAwesomeButton);
 
 var apiUrl="http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/";
 
@@ -78596,14 +78595,14 @@ catch(function(error){
 console.error(error);
 });
 }}]);return Content;}(_react.Component);exports.default=Content;
-}, 453, null, "GurulaCoffee/app/Content.js");
+}, 454, null, "GurulaCoffee/app/Content.js");
 __d(/* react-native-push-notification/index.js */function(global, require, module, exports) {
 
 
 
 'use strict';
 
-var RNNotificationsComponent=require(455 /* ./component */);
+var RNNotificationsComponent=require(456 /* ./component */);
 
 var AppState=RNNotificationsComponent.state;
 var RNNotifications=RNNotificationsComponent.component;
@@ -78897,7 +78896,7 @@ return this.callNative('clearAllNotifications',arguments);
 };
 
 module.exports=Notifications;
-}, 454, null, "react-native-push-notification/index.js");
+}, 455, null, "react-native-push-notification/index.js");
 __d(/* react-native-push-notification/component/index.android.js */function(global, require, module, exports) {'use strict';var _require=
 
 
@@ -79011,11 +79010,11 @@ RNPushNotification.clearAllNotifications();
 module.exports={
 state:false,
 component:new NotificationsComponent()};
-}, 455, null, "react-native-push-notification/component/index.android.js");
-__d(/* react-native-awesome-button/index.js */function(global, require, module, exports) {var AwesomeButton=require(457 /* ./src/AwesomeButton.js */);
+}, 456, null, "react-native-push-notification/component/index.android.js");
+__d(/* react-native-awesome-button/index.js */function(global, require, module, exports) {var AwesomeButton=require(458 /* ./src/AwesomeButton.js */);
 
 module.exports=AwesomeButton;
-}, 456, null, "react-native-awesome-button/index.js");
+}, 457, null, "react-native-awesome-button/index.js");
 __d(/* react-native-awesome-button/src/AwesomeButton.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 
 var _reactNative=require(42 /* react-native */);
@@ -79026,7 +79025,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _ProgressBar=require(458 /* ./ProgressBar */);var _ProgressBar2=babelHelpers.interopRequireDefault(_ProgressBar);var
+var _ProgressBar=require(459 /* ./ProgressBar */);var _ProgressBar2=babelHelpers.interopRequireDefault(_ProgressBar);var
 
 InnerButtonView=function(_Component){babelHelpers.inherits(InnerButtonView,_Component);function InnerButtonView(){babelHelpers.classCallCheck(this,InnerButtonView);return babelHelpers.possibleConstructorReturn(this,(InnerButtonView.__proto__||Object.getPrototypeOf(InnerButtonView)).apply(this,arguments));}babelHelpers.createClass(InnerButtonView,[{key:'render',value:function render()
 {
@@ -79142,7 +79141,7 @@ marginRight:8},
 
 container:{
 flex:1}});
-}, 457, null, "react-native-awesome-button/src/AwesomeButton.js");
+}, 458, null, "react-native-awesome-button/src/AwesomeButton.js");
 __d(/* react-native-awesome-button/src/ProgressBar.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 
 var _reactNative=require(42 /* react-native */);var
@@ -79163,7 +79162,7 @@ _react2.default.createElement(_reactNative.ProgressBarAndroid,{color:this.props.
 
 }
 }}]);return ProgressBar;}(_react.Component);exports.default=ProgressBar;
-}, 458, null, "react-native-awesome-button/src/ProgressBar.js");
+}, 459, null, "react-native-awesome-button/src/ProgressBar.js");
 __d(/* GurulaCoffee/app/CoffeePic.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -79198,7 +79197,7 @@ flex:1}});exports.default=
 
 
 CoffeePic;
-}, 459, null, "GurulaCoffee/app/CoffeePic.js");
+}, 460, null, "GurulaCoffee/app/CoffeePic.js");
 __d(/* GurulaCoffee/app/HowItWorks.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -79248,7 +79247,7 @@ borderRadius:5}});exports.default=
 
 
 HowItWorks;
-}, 460, null, "GurulaCoffee/app/HowItWorks.js");
+}, 461, null, "GurulaCoffee/app/HowItWorks.js");
 __d(/* GurulaCoffee/app/WrongResult.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -79258,8 +79257,8 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _reactNativeAwesomeButton=require(456 /* react-native-awesome-button */);var _reactNativeAwesomeButton2=babelHelpers.interopRequireDefault(_reactNativeAwesomeButton);
-var _reactNativeTextinputEffects=require(462 /* react-native-textinput-effects */);
+var _reactNativeAwesomeButton=require(457 /* react-native-awesome-button */);var _reactNativeAwesomeButton2=babelHelpers.interopRequireDefault(_reactNativeAwesomeButton);
+var _reactNativeTextinputEffects=require(463 /* react-native-textinput-effects */);
 var _reactNativeRouterFlux=require(400 /* react-native-router-flux */);
 
 
@@ -79438,18 +79437,18 @@ color:'white'},
 checkButtonBackground:{
 borderRadius:4,
 height:40}});
-}, 461, null, "GurulaCoffee/app/WrongResult.js");
-__d(/* react-native-textinput-effects/lib/index.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.Fumi=exports.Sae=exports.Makiko=exports.Kohana=exports.Hideo=exports.Akira=exports.Madoka=exports.Isao=exports.Jiro=exports.Hoshi=exports.Kaede=undefined;var _Kaede=require(463 /* ./Kaede */);var _Kaede2=babelHelpers.interopRequireDefault(_Kaede);
-var _Hoshi=require(465 /* ./Hoshi */);var _Hoshi2=babelHelpers.interopRequireDefault(_Hoshi);
-var _Jiro=require(466 /* ./Jiro */);var _Jiro2=babelHelpers.interopRequireDefault(_Jiro);
-var _Isao=require(467 /* ./Isao */);var _Isao2=babelHelpers.interopRequireDefault(_Isao);
-var _Madoka=require(468 /* ./Madoka */);var _Madoka2=babelHelpers.interopRequireDefault(_Madoka);
-var _Akira=require(469 /* ./Akira */);var _Akira2=babelHelpers.interopRequireDefault(_Akira);
-var _Hideo=require(470 /* ./Hideo */);var _Hideo2=babelHelpers.interopRequireDefault(_Hideo);
-var _Kohana=require(471 /* ./Kohana */);var _Kohana2=babelHelpers.interopRequireDefault(_Kohana);
-var _Makiko=require(472 /* ./Makiko */);var _Makiko2=babelHelpers.interopRequireDefault(_Makiko);
-var _Sae=require(473 /* ./Sae */);var _Sae2=babelHelpers.interopRequireDefault(_Sae);
-var _Fumi=require(474 /* ./Fumi */);var _Fumi2=babelHelpers.interopRequireDefault(_Fumi);exports.
+}, 462, null, "GurulaCoffee/app/WrongResult.js");
+__d(/* react-native-textinput-effects/lib/index.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.Fumi=exports.Sae=exports.Makiko=exports.Kohana=exports.Hideo=exports.Akira=exports.Madoka=exports.Isao=exports.Jiro=exports.Hoshi=exports.Kaede=undefined;var _Kaede=require(464 /* ./Kaede */);var _Kaede2=babelHelpers.interopRequireDefault(_Kaede);
+var _Hoshi=require(466 /* ./Hoshi */);var _Hoshi2=babelHelpers.interopRequireDefault(_Hoshi);
+var _Jiro=require(467 /* ./Jiro */);var _Jiro2=babelHelpers.interopRequireDefault(_Jiro);
+var _Isao=require(468 /* ./Isao */);var _Isao2=babelHelpers.interopRequireDefault(_Isao);
+var _Madoka=require(469 /* ./Madoka */);var _Madoka2=babelHelpers.interopRequireDefault(_Madoka);
+var _Akira=require(470 /* ./Akira */);var _Akira2=babelHelpers.interopRequireDefault(_Akira);
+var _Hideo=require(471 /* ./Hideo */);var _Hideo2=babelHelpers.interopRequireDefault(_Hideo);
+var _Kohana=require(472 /* ./Kohana */);var _Kohana2=babelHelpers.interopRequireDefault(_Kohana);
+var _Makiko=require(473 /* ./Makiko */);var _Makiko2=babelHelpers.interopRequireDefault(_Makiko);
+var _Sae=require(474 /* ./Sae */);var _Sae2=babelHelpers.interopRequireDefault(_Sae);
+var _Fumi=require(475 /* ./Fumi */);var _Fumi2=babelHelpers.interopRequireDefault(_Fumi);exports.
 
 
 Kaede=_Kaede2.default;exports.
@@ -79463,7 +79462,7 @@ Kohana=_Kohana2.default;exports.
 Makiko=_Makiko2.default;exports.
 Sae=_Sae2.default;exports.
 Fumi=_Fumi2.default;
-}, 462, null, "react-native-textinput-effects/lib/index.js");
+}, 463, null, "react-native-textinput-effects/lib/index.js");
 __d(/* react-native-textinput-effects/lib/Kaede.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -79475,7 +79474,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var PADDING=16;var
 
@@ -79564,7 +79563,7 @@ backgroundColor:'white',
 color:'black',
 fontSize:16,
 fontWeight:'bold'}});
-}, 463, null, "react-native-textinput-effects/lib/Kaede.js");
+}, 464, null, "react-native-textinput-effects/lib/Kaede.js");
 __d(/* react-native-textinput-effects/lib/BaseInput.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 
 
@@ -79701,7 +79700,7 @@ return this.inputRef().isFocused();
 {
 this.inputRef().clear();
 }}]);return BaseInput;}(_react.Component);BaseInput.propTypes={label:_react.PropTypes.string,value:_react.PropTypes.string,defaultValue:_react.PropTypes.string,style:_reactNative.View.propTypes.style,inputStyle:_reactNative.Text.propTypes.style,labelStyle:_reactNative.Text.propTypes.style,easing:_react.PropTypes.func,animationDuration:_react.PropTypes.number,onBlur:_react.PropTypes.func,onFocus:_react.PropTypes.func,onChange:_react.PropTypes.func};exports.default=BaseInput;
-}, 464, null, "react-native-textinput-effects/lib/BaseInput.js");
+}, 465, null, "react-native-textinput-effects/lib/BaseInput.js");
 __d(/* react-native-textinput-effects/lib/Hoshi.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -79712,7 +79711,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var PADDING=16;var
 
@@ -79837,7 +79836,7 @@ bottom:0,
 left:0,
 right:0,
 height:3}});
-}, 465, null, "react-native-textinput-effects/lib/Hoshi.js");
+}, 466, null, "react-native-textinput-effects/lib/Hoshi.js");
 __d(/* react-native-textinput-effects/lib/Jiro.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -79849,7 +79848,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var PADDING=16;var
 
@@ -80002,7 +80001,7 @@ position:'absolute',
 bottom:0,
 left:0,
 right:0}});
-}, 466, null, "react-native-textinput-effects/lib/Jiro.js");
+}, 467, null, "react-native-textinput-effects/lib/Jiro.js");
 __d(/* react-native-textinput-effects/lib/Isao.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -80013,7 +80012,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var LABEL_HEIGHT=24;
 var PADDING=16;var
@@ -80161,7 +80160,7 @@ position:'absolute',
 bottom:LABEL_HEIGHT,
 left:0,
 right:0}});
-}, 467, null, "react-native-textinput-effects/lib/Isao.js");
+}, 468, null, "react-native-textinput-effects/lib/Isao.js");
 __d(/* react-native-textinput-effects/lib/Madoka.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -80171,7 +80170,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var LABEL_HEIGHT=24;
 var PADDING=16;var
@@ -80313,7 +80312,7 @@ paddingVertical:0,
 color:'black',
 fontSize:18,
 fontWeight:'bold'}});
-}, 468, null, "react-native-textinput-effects/lib/Madoka.js");
+}, 469, null, "react-native-textinput-effects/lib/Madoka.js");
 __d(/* react-native-textinput-effects/lib/Akira.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -80324,7 +80323,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var LABEL_HEIGHT=24;
 var PADDING=16;var
@@ -80465,7 +80464,7 @@ padding:0,
 color:'black',
 fontSize:18,
 textAlign:'center'}});
-}, 469, null, "react-native-textinput-effects/lib/Akira.js");
+}, 470, null, "react-native-textinput-effects/lib/Akira.js");
 __d(/* react-native-textinput-effects/lib/Hideo.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -80475,7 +80474,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);var
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);var
 
 Hideo=function(_BaseInput){babelHelpers.inherits(Hideo,_BaseInput);function Hideo(){babelHelpers.classCallCheck(this,Hideo);return babelHelpers.possibleConstructorReturn(this,(Hideo.__proto__||Object.getPrototypeOf(Hideo)).apply(this,arguments));}babelHelpers.createClass(Hideo,[{key:'render',value:function render()
 
@@ -80576,7 +80575,7 @@ paddingVertical:0,
 color:'black',
 backgroundColor:'white',
 fontSize:18}});
-}, 470, null, "react-native-textinput-effects/lib/Hideo.js");
+}, 471, null, "react-native-textinput-effects/lib/Hideo.js");
 __d(/* react-native-textinput-effects/lib/Kohana.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -80588,7 +80587,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var PADDING=16;var
 
@@ -80697,7 +80696,7 @@ paddingHorizontal:PADDING,
 paddingVertical:0,
 color:'black',
 fontSize:18}});
-}, 471, null, "react-native-textinput-effects/lib/Kohana.js");
+}, 472, null, "react-native-textinput-effects/lib/Kohana.js");
 __d(/* react-native-textinput-effects/lib/Makiko.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -80709,7 +80708,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var ICON_WIDTH=60;
 var ICON_SIZE=30;
@@ -80851,7 +80850,7 @@ paddingHorizontal:PADDING,
 paddingVertical:0,
 color:'black',
 fontSize:18}});
-}, 472, null, "react-native-textinput-effects/lib/Makiko.js");
+}, 473, null, "react-native-textinput-effects/lib/Makiko.js");
 __d(/* react-native-textinput-effects/lib/Sae.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -80861,7 +80860,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var LABEL_HEIGHT=24;
 var PADDING=16;var
@@ -81007,7 +81006,7 @@ paddingTop:PADDING/2,
 paddingLeft:0,
 color:'white',
 fontSize:18}});
-}, 473, null, "react-native-textinput-effects/lib/Sae.js");
+}, 474, null, "react-native-textinput-effects/lib/Sae.js");
 __d(/* react-native-textinput-effects/lib/Fumi.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -81018,7 +81017,7 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _BaseInput2=require(464 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
+var _BaseInput2=require(465 /* ./BaseInput */);var _BaseInput3=babelHelpers.interopRequireDefault(_BaseInput2);
 
 var PADDING=16;
 var ICON_WIDTH=40;var
@@ -81161,7 +81160,7 @@ position:'absolute',
 width:1,
 backgroundColor:'#f0f0f0',
 marginTop:-8}});
-}, 474, null, "react-native-textinput-effects/lib/Fumi.js");
+}, 475, null, "react-native-textinput-effects/lib/Fumi.js");
 __d(/* GurulaCoffee/app/QuietHours.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -81170,7 +81169,8 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _reactNativeDatepicker=require(476 /* react-native-datepicker */);var _reactNativeDatepicker2=babelHelpers.interopRequireDefault(_reactNativeDatepicker);var
+var _reactNativeDatepicker=require(477 /* react-native-datepicker */);var _reactNativeDatepicker2=babelHelpers.interopRequireDefault(_reactNativeDatepicker);
+var renderIf=require(480 /* render-if */);var
 
 
 QuietHours=function(_Component){babelHelpers.inherits(QuietHours,_Component);
@@ -81181,18 +81181,21 @@ _this.setTime=_this.setTime.bind(_this);
 
 _this.state={
 start:null,
-end:null};return _this;
+end:null,
+update:null};return _this;
 
 }babelHelpers.createClass(QuietHours,[{key:'componentWillMount',value:function componentWillMount()
 
 {var _this2=this;
-_reactNative.AsyncStorage.multiGet(["start","end"]).then(function(values){
+_reactNative.AsyncStorage.multiGet(["start","end","update"]).then(function(values){
 var start=values[0][1];
 var end=values[1][1];
+var update=values[2][1];
 
 _this2.setState({
 start:start,
-end:end});
+end:end,
+update:eval(update)});
 
 });
 }},{key:'setTime',value:function setTime(
@@ -81209,11 +81212,15 @@ return(
 _react2.default.createElement(_reactNative.View,{style:styles.container},
 _react2.default.createElement(_reactNative.Text,{style:styles.header},'Select your quiet hours'),
 _react2.default.createElement(_reactNative.Text,{style:styles.text},'You won\'t be notified of coffee during this time',"\n"),
+renderIf(!this.state.update)(
+_react2.default.createElement(_reactNative.Text,{style:styles.disabled},'Notifications are disabled')),
+
 _react2.default.createElement(_reactNative.View,{style:styles.timepickers},
 _react2.default.createElement(_reactNativeDatepicker2.default,{
 style:{width:200},
 date:this.state.start,
 mode:'time',
+disabled:!this.state.update,
 format:'HH:mm',
 placeholder:'Select start time',
 confirmBtnText:'Confirm',
@@ -81227,6 +81234,7 @@ style:{width:200},
 date:this.state.end,
 mode:'time',
 format:'HH:mm',
+disabled:!this.state.update,
 placeholder:'Select end time',
 confirmBtnText:'Confirm',
 cancelBtnText:'Cancel',
@@ -81258,8 +81266,11 @@ paddingTop:20},
 
 timepickers:{
 alignItems:'flex-end',
-paddingTop:50}});
-}, 475, null, "GurulaCoffee/app/QuietHours.js");
+paddingTop:50},
+
+disabled:{
+fontSize:10}});
+}, 476, null, "GurulaCoffee/app/QuietHours.js");
 __d(/* react-native-datepicker/index.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(12 /* react */);var _react2=babelHelpers.interopRequireDefault(_react);
 var _reactNative=require(42 /* react-native */);
 
@@ -81273,8 +81284,8 @@ var _reactNative=require(42 /* react-native */);
 
 
 
-var _style=require(477 /* ./style */);var _style2=babelHelpers.interopRequireDefault(_style);
-var _moment=require(478 /* moment */);var _moment2=babelHelpers.interopRequireDefault(_moment);
+var _style=require(478 /* ./style */);var _style2=babelHelpers.interopRequireDefault(_style);
+var _moment=require(453 /* moment */);var _moment2=babelHelpers.interopRequireDefault(_moment);
 
 var FORMATS={
 'date':'YYYY-MM-DD',
@@ -81629,7 +81640,7 @@ is24Hour:_react2.default.PropTypes.bool};exports.default=
 
 
 DatePicker;
-}, 476, null, "react-native-datepicker/index.js");
+}, 477, null, "react-native-datepicker/index.js");
 __d(/* react-native-datepicker/style.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _reactNative=require(42 /* react-native */);
 
 var style=_reactNative.StyleSheet.create({
@@ -81706,9 +81717,26 @@ backgroundColor:'#eee'}});exports.default=
 
 
 style;
-}, 477, null, "react-native-datepicker/style.js");
+}, 478, null, "react-native-datepicker/style.js");
 __d(/* react-native-datepicker/date_icon.png */function(global, require, module, exports) {module.exports = require(172 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/node_modules/react-native-datepicker","width":64,"height":64,"scales":[1],"hash":"1edd5017f455b09c608e175b1285c06d","name":"date_icon","type":"png"});
 }, 479, null, "react-native-datepicker/date_icon.png");
+__d(/* render-if/lib/renderIf.js */function(global, require, module, exports) {'use strict';
+
+Object.defineProperty(exports,"__esModule",{
+value:true});
+
+var isFunction=function isFunction(input){
+return typeof input==='function';
+};
+
+exports.default=function(predicate){
+return function(elemOrThunk){
+return predicate?isFunction(elemOrThunk)?elemOrThunk():elemOrThunk:null;
+};
+};
+
+module.exports=exports['default'];
+}, 480, null, "render-if/lib/renderIf.js");
 ;require(192);
 ;require(0);
 //# sourceMappingURL=/index.android.map?platform=android
