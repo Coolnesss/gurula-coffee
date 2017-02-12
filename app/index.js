@@ -30,8 +30,9 @@ const App = () => {
           tabs={true}
           tabBarStyle={{ backgroundColor: '#FFFFFF' }}
         >
-        <Scene key="contentTab" title="Coffee" icon={TabIcon}>
+        <Scene key="contentTab" title="Coffee" icon={TabIcon} hideNavBar={true}>
           <Scene key="content"
+            hideNavBar={true}
             component={Content}
             title=""
             initial
@@ -47,6 +48,7 @@ const App = () => {
           </Scene>
         <Scene key="settingsTab" title="Settings" icon={TabIcon}>
             <Scene
+              hideNavBar={true}
               key="settingsScreen"
               component={SettingsScreen}
               title=""

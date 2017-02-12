@@ -35,40 +35,53 @@ class AppSettings extends Component {
 
   render() {
     return (
-      <View style={{backgroundColor:'#EFEFF4',flex:1}}>
-        <View style={{borderBottomWidth:1, backgroundColor:'#f7f7f8',borderColor:'#c8c7cc'}}>
-          <Text style={{alignSelf:'center',marginTop:30,marginBottom:10,fontWeight:'bold',fontSize:16}}>Settings</Text>
+      <View style={{backgroundColor:'#f6f6f6', flex:1}}>
+        <View style={{borderBottomWidth:1, backgroundColor:'#263238',borderColor:'#c8c7cc'}}>
+          <Text style={{color:'white',marginTop:35,marginBottom:15, marginLeft:15,fontWeight:'bold',fontSize:20}}>Settings</Text>
         </View>
         <View style={{backgroundColor:'#EFEFF4',flex:1}}>
-          <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
-            <SettingsList.Header headerStyle={{marginTop:15}}/>
+          <SettingsList borderColor='#d6d5d9' defaultItemSize={50}>
 
-            <SettingsList.Header headerText='Notifications' />
+              <SettingsList.Item
+               hasNavArrow={false}
+               title='Notifications'
+               titleStyle={{color:'#009688', marginBottom:10, fontWeight:'500'}}
+               itemWidth={50}
+               borderHide={'Both'}
+             />
               <SettingsList.Item
                 hasSwitch={true}
                 switchState={this.state.update}
                 switchOnValueChange={this.toggleUpdateState}
                 hasNavArrow={false}
                 title='Receive notifications (beta)'
-                titleStyle={{fontSize:16}}
+                itemWidth={70}
+                titleStyle={{color:'black', fontSize: 16}}
               />
               <SettingsList.Item
+                itemWidth={70}
+                titleStyle={{color:'black', fontSize: 16}}
                 hasNavArrow={true}
                 title='Set quiet hours'
-                titleStyle={{fontSize:16}}
                 onPress={() => Actions.quietHours()}
               />
 
-            <SettingsList.Header headerText='Misc'/>
               <SettingsList.Item
+               hasNavArrow={false}
+               title='Misc'
+               titleStyle={{color:'#009688', marginBottom:10, fontWeight:'500'}}
+               itemWidth={50}
+               borderHide={'Both'}
+             />
+              <SettingsList.Item
+                itemWidth={70}
+                titleStyle={{color:'black', fontSize: 16}}
                 hasNavArrow={true}
                 title='How does it work'
-                titleStyle={{fontSize:16}}
                 onPress={() => Actions.howItWorks()}
               />
           </SettingsList>
         </View>
-        <PushController />
       </View>
     );
   }
@@ -76,9 +89,11 @@ class AppSettings extends Component {
 const styles = StyleSheet.create({
   imageStyle:{
     marginLeft:15,
+    marginRight:20,
     alignSelf:'center',
-    height:30,
-    width:30
+    width:20,
+    height:24,
+    justifyContent:'center'
   },
   titleInfoStyle:{
     fontSize:16,
