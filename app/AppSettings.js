@@ -4,13 +4,16 @@ import { View, Text, StyleSheet, Picker, AppState, Platform, Button, Image, Asyn
 import { Actions } from 'react-native-router-flux';
 import SettingsList from 'react-native-settings-list';
 import PushController from './PushController';
+import { Icon } from 'react-native-material-design';
 
 class AppSettings extends Component {
 
   constructor() {
     super();
     this.toggleUpdateState = this.toggleUpdateState.bind(this);
-    this.state = {update: false};
+    this.state = {
+      update: false
+    };
   }
 
   componentWillMount() {
@@ -54,7 +57,12 @@ class AppSettings extends Component {
                 switchState={this.state.update}
                 switchOnValueChange={this.toggleUpdateState}
                 hasNavArrow={false}
-                title='Receive notifications (beta)'
+                icon= {
+                  <View style={styles.iconStyle}>
+                    <Icon style={{color:'#009688'}}name="sync"></Icon>
+                  </View>
+                }
+                title={<Text>Receive notifications (beta)</Text>}
                 itemWidth={70}
                 titleStyle={{color:'black', fontSize: 16}}
               />
@@ -63,6 +71,11 @@ class AppSettings extends Component {
                 titleStyle={{color:'black', fontSize: 16}}
                 hasNavArrow={true}
                 title='Set quiet hours'
+                icon= {
+                  <View style={styles.iconStyle}>
+                    <Icon style={{color:'#009688'}}name="timelapse"></Icon>
+                  </View>
+                }
                 onPress={() => Actions.quietHours()}
               />
 
@@ -78,6 +91,11 @@ class AppSettings extends Component {
                 titleStyle={{color:'black', fontSize: 16}}
                 hasNavArrow={true}
                 title='How does it work'
+                icon= {
+                  <View style={styles.iconStyle}>
+                    <Icon style={{color:'#009688'}}name="build"></Icon>
+                  </View>
+                }
                 onPress={() => Actions.howItWorks()}
               />
           </SettingsList>
@@ -98,6 +116,11 @@ const styles = StyleSheet.create({
   titleInfoStyle:{
     fontSize:16,
     color: '#8e8e93'
+  },
+  iconStyle: {
+    height:30,
+    marginLeft:10,
+    alignSelf:'center'
   }
 });
 

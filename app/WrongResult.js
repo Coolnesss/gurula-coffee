@@ -8,9 +8,10 @@ import {
   TextInput
 } from 'react-native';
 import AwesomeButton from 'react-native-awesome-button';
-import { Kaede } from 'react-native-textinput-effects';
+import { Madoka } from 'react-native-textinput-effects';
 import { Actions } from 'react-native-router-flux';
-
+import Modal from 'react-native-modalbox';
+import { Button } from 'react-native-material-design';
 
 const apiUrl = "http://coffeeapi.g7xd2rhrfs.eu-central-1.elasticbeanstalk.com/"
 
@@ -64,7 +65,6 @@ export default class WrongResult extends Component {
           });
         })
         .catch((error) => {
-          console.error(error);
           this.setState({
             buttonState: "fail"
           })
@@ -80,76 +80,75 @@ export default class WrongResult extends Component {
     }
 
      render() {
-       return (
-         <ScrollView
-           ref='scrollView'
-           onContentSizeChange={(w, h) => this.contentHeight = h}
-           onLayout={ev => this.scrollViewHeight = ev.nativeEvent.layout.height}
-           style={styles.container}
-           contentContainerStyle={styles.content}
-           >
-        <Text style={styles.title}>Wrong result?</Text>
-        <Text style={styles.subtext}>
-          Step 1. Go to Gurula{"\n"}
-          Step 2. Look at the coffee pan; there's a scale that shows the amount of coffee{"\n"}
-          Step 3. Estimate how much coffee there is and if it's significantly different from the predicted amount, enter the correct amount here{"\n"}
-          Step 4. Press submit.
-        </Text>
-            <View style={[styles.card1]}>
-               <Kaede
-                 onChangeText={ (value) => {this.setState({selected: value}); this.scrollToBottom() }}
-                 style={styles.input}
-                 label={'Amount of coffee'}
-                 labelStyle={{
-                   color: 'white',
-                   backgroundColor: '#1155DD',
-                 }}
-                 inputStyle={{
-                   color: 'white',
-                   backgroundColor: 'gray',
-                 }}
-                 keyboardType="numeric"
-               />
-             </View>
-             <View style={styles.button}>
-             <AwesomeButton
-                 backgroundStyle={styles.checkButtonBackground}
-                           labelStyle={styles.checkButtonLabel}
-                           transitionDuration={200}
-                           states={{
-                             idle: {
-                               text: 'Submit',
-                               onPress: this.postData,
-                               backgroundColor: '#1155DD',
-                             },
-                             busy: {
-                               text: 'Sending',
-                               backgroundColor: '#002299',
-                               spinner: true,
-                             },
-                             success: {
-                               text: "Done",
-                               onPress: () => Actions.pop(),
-                               backgroundColor: '#339944'
-                             },
-                             fail: {
-                               text: "FAILED",
-                               backgroundColor: "red"
-                             }
-                           }}
-                           buttonState={this.state.buttonState}
-                           />
-                           <Text style={styles.response}> </Text>
+       return(<View style={styles.wrapper}>
+          <Text style={styles.title}>Wrong result?</Text>
+           <Text style={styles.subtext}>
+             Step 1. Go to Gurula{"\n"}
+             Step 2. Look at the coffee pan; there's a scale that shows the amount of coffee{"\n"}
+             Step 3. Estimate how much coffee there is and if it's significantly different from the predicted amount, enter the correct amount here{"\n"}
+             Step 4. Press submit.
+           </Text>
+           <AwesomeButton
+             backgroundStyle={styles.checkButtonBackground}
+             labelStyle={styles.checkButtonLabel}
+             states={{
+                        default: {
+                          text: 'Press to begin',
+                          onPress: () => this.refs.modal.open(),
+                          backgroundColor: '#009688'
+                        }
+                       }}
+           />
 
-                       </View>
-           </ScrollView>
-       );
+          <Modal style={[styles.modal]} position={"center"} ref={"modal"}>
+              <Text style={[styles.text, {fontSize: 30}]}>Enter amount of coffee</Text>
+              <Text style={[styles.text]}>(0 to 14 cups)</Text>
+                <View style={[styles.card1]}>
+                  <Madoka
+                    label={'Coffee (cups)'}
+                    borderColor={'#aee2c9'}
+                    onChangeText={ (value) => {this.setState({selected: value})}}
+                    labelStyle={{ color: '#009688' }}
+                    inputStyle={{ color: '#f4a197' }}
+                    keyboardType="numeric"
+                  />
+                 </View>
+                 <View style={{flexDirection: 'row'}}>
+                   <AwesomeButton
+                       backgroundStyle={styles.checkButtonBackground}
+                                 labelStyle={styles.checkButtonLabel}
+                                 transitionDuration={200}
+                                 states={{
+                                   idle: {
+                                     text: 'Submit',
+                                     onPress: this.postData,
+                                     backgroundColor: '#009688',
+                                   },
+                                   success: {
+                                     text: "Done",
+                                     onPress: () => Actions.pop(),
+                                     backgroundColor: '#339944'
+                                   },
+                                   fail: {
+                                     text: "FAILED",
+                                     backgroundColor: "red"
+                                   }
+                                 }}
+                                 buttonState={this.state.buttonState}
+                                 />
+                           </View>
+                  <Text style={{fontSize: 20, fontColor: "black", textAlign: "center"}}>Swipe down to exit</Text>
+          </Modal>
+       </View>
+     );
      }
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 70,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   content: {
     // not cool but good enough to make all inputs visible when keyboard is active
@@ -186,6 +185,20 @@ const styles = StyleSheet.create({
   },
   checkButtonBackground: {
     borderRadius: 4,
-    height: 40
+    height: 40,
+    margin: 20,
+    alignItems: 'flex-end'
+  },
+  modal: {
+    justifyContent: 'center',
+  },
+  wrapper: {
+    paddingTop: 50,
+    flex: 1
+  },
+  text: {
+    fontSize: 22,
+    textAlign: 'center',
+    paddingTop:20
   }
 });

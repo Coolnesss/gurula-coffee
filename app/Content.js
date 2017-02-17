@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
-import { View, Text, StyleSheet, Picker, AppState, Platform, Button } from 'react-native';
+import { View, Text, StyleSheet, Picker, AppState, Platform, TouchableOpacity } from 'react-native';
 import PushController from './PushController';
 import PushNotification from 'react-native-push-notification';
 import AwesomeButton from 'react-native-awesome-button';
@@ -46,6 +46,11 @@ const styles = StyleSheet.create({
   },
   wrongResult: {
     fontSize: 16
+  },
+  icon: {
+    color: 'white',
+    lineHeight: 20,
+    fontSize: 20
   }
 });
 
@@ -80,7 +85,7 @@ export default class Content extends Component {
   parseResponse() {
     let response = this.state.response;
     if (response === "NO POT") {
-      return "The lights don't seem to be on in Gurula.";
+      return "The pot seems to be missing from the image.";
     }
     return this.state.response + " cups of coffee";
   }
@@ -98,13 +103,13 @@ export default class Content extends Component {
                           transitionDuration={200}
                           states={{
                             idle: {
-                              text: 'Check for coffee',
+                              text: <Text >Check for coffee</Text>,
                               onPress: this.checkCoffeeState,
-                              backgroundColor: '#1155DD',
+                              backgroundColor: '#009688',
                             },
                             busy: {
                               text: 'Checking',
-                              backgroundColor: '#002299',
+                              backgroundColor: '#009688',
                               spinner: true,
                             },
                             success: {
@@ -117,20 +122,19 @@ export default class Content extends Component {
                           />
                         <Text style={styles.response}> </Text>
                       </View>
-                      <Text
-                        style={styles.wrongResult}
+                      <TouchableOpacity
                         onPress={() => Actions.wrongResult()}>
-                        Wrong result?
-                      </Text>
+                        <Text style={styles.wrongResult}>Wrong result?</Text>
+                      </TouchableOpacity>
                       <View style={styles.button}>
                         <AwesomeButton
                           backgroundStyle={styles.checkButtonBackground}
                           labelStyle={styles.checkButtonLabel}
                           states={{
                             default: {
-                              text: 'See the camera photo',
+                              text: <Text>See the camera photo</Text>,
                               onPress: () => Actions.coffeePic(),
-                              backgroundColor: '#1155DD'
+                              backgroundColor: '#009688'
                             }
                          }} />
                          <Text style={styles.response}> </Text>

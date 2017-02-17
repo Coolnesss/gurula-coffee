@@ -15,6 +15,8 @@
     "react-native-datepicker": "^1.4.3",
     "react-native-fcm": "^5.0.0",
     "react-native-list-popover": "^1.0.5",
+    "react-native-material-design": "^0.3.7",
+    "react-native-modalbox": "^1.3.9",
     "react-native-router-flux": "^3.37.0",
     "react-native-settings-list": "^1.3.2",
     "react-native-textinput-effects": "^0.3.0",
