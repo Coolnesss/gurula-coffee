@@ -46,7 +46,7 @@ export default class WrongResult extends Component {
 
     postData() {
       this.setState({buttonState: "busy"});
-      fetch(apiUrl + "sample", {
+      fetch(apiUrl + "samples", {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
